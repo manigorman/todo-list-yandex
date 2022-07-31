@@ -34,10 +34,9 @@ struct ToDoItem {
     }
 }
 
-extension ToDoItem {
-    enum Importance: String {
-        case low, basic, important
-    }
+
+enum Importance: String {
+    case low, basic, important
 }
 
 extension ToDoItem {
