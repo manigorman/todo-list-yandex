@@ -29,7 +29,7 @@ final class FileCache {
         }
     }
     
-    public func removeItem(with id: UUID) -> ToDoItem? {
+    @discardableResult public func removeItem(with id: UUID) -> ToDoItem? {
         
         guard let index = self.list.firstIndex(where: { $0.id == id }) else {
             print("There is no such item")

@@ -7,28 +7,20 @@
 
 import UIKit
 
-class TaskViewController: UIViewController {
+final class TaskViewController: UIViewController {
     
     // MARK: - Properties
     
     var id: UUID = UUID()
     
-    let contentView = TaskView()
-    
-    var deadline: Date? = nil
+    private var contentView = TaskView()
     
     // MARK: - Life Cycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        navigationController?.navigationBar.prefersLargeTitles = false
-        title = "Дело"
-        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Отмена", style: .plain, target: self, action: #selector(handleCancel))
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Сохранить", style: .done, target: self, action: #selector(handleDone))
-        
-        view.backgroundColor = UIColor(named: "PrimaryBackground")
-        view.addSubview(contentView)
+        setupViews()
         
         contentView.textView.delegate = self
         
@@ -80,7 +72,7 @@ class TaskViewController: UIViewController {
         FileCache.shared.addNewItem(ToDoItem(id: self.id,
                                              text: contentView.textView.text,
                                              importance: importance,
-                                             deadline: self.deadline,
+                                             deadline: contentView.deadlineSwitch.isOn ? self.contentView.datePicker.date : nil,
                                              isCompleted: false,
                                              createdAt: Date()))
         
@@ -97,14 +89,13 @@ class TaskViewController: UIViewController {
         UIView.animate(withDuration: 0.3) {
             if sender.isOn {
                 self.showDateButton()
-                self.deadline = self.contentView.datePicker.date
             } else {
-                self.deadline = nil
                 self.contentView.divider2.isHidden = true
                 self.contentView.divider2.alpha = 0
                 self.contentView.pickerContainerView.isHidden = true
                 self.contentView.pickerContainerView.alpha = 0
                 self.contentView.dateButton.isHidden = true
+                self.contentView.datePicker.isHidden = true
                 self.contentView.dateButton.alpha = 0
                 self.contentView.listStackView.layoutIfNeeded()
             }
@@ -118,18 +109,14 @@ class TaskViewController: UIViewController {
             self.contentView.pickerContainerView.isHidden = false
             self.contentView.pickerContainerView.alpha = 1
             self.contentView.divider2.isHidden = false
+            self.contentView.datePicker.isHidden = false
             self.contentView.divider2.alpha = 1
             self.contentView.listStackView.layoutIfNeeded()
         }
     }
     
     @objc private func handleDatePicker(_ sender: UIDatePicker) {
-        let dateFormatter = DateFormatter()
-        dateFormatter.locale = Locale(identifier: "ru_RU")
-        dateFormatter.dateStyle = .long
-        
-        self.deadline = sender.date
-        self.contentView.dateButton.setTitle(dateFormatter.string(from: sender.date), for: .normal)
+        self.contentView.dateButton.setTitle(DateFormatter.ruRuLong.string(from: sender.date), for: .normal)
     }
     
     @objc private func handleDelete() {
@@ -165,6 +152,15 @@ class TaskViewController: UIViewController {
     
     // MARK: - Methods
     
+    private func setupViews() {
+        navigationController?.navigationBar.prefersLargeTitles = false
+        title = "Дело"
+        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Отмена", style: .plain, target: self, action: #selector(handleCancel))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Сохранить", style: .done, target: self, action: #selector(handleDone))
+        
+        view.addSubview(contentView)
+    }
+    
     private func configure() {
         do {
             try FileCache.shared.loadJSONItems(from: "Data.json")
@@ -179,7 +175,6 @@ class TaskViewController: UIViewController {
         }
         
         self.id = task.id
-        self.deadline = task.deadline
         self.contentView.textView.text = task.text
         
         let index: Int
@@ -202,7 +197,7 @@ class TaskViewController: UIViewController {
         }
         
         self.contentView.dateButton.setTitle(dateFormatter.string(from: deadline), for: .normal)
-        self.contentView.datePicker.date = deadline
+        self.contentView.datePicker.date = task.deadline ?? Date()
         
         self.showDateButton()
         self.contentView.deadlineSwitch.isOn = true

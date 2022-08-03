@@ -7,12 +7,13 @@
 
 import UIKit
 
-class TaskView: UIView {
+final class TaskView: UIView {
 
     // MARK: - Properties
     
     public lazy var contentScrollView: UIScrollView = {
         let scrollView = UIScrollView()
+        
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         
         return scrollView
@@ -26,20 +27,11 @@ class TaskView: UIView {
         return view
     }()
     
-    public lazy var contentStackView: UIView = {
-        let view = UIView()
-        
-        view.backgroundColor = .link
-        view.translatesAutoresizingMaskIntoConstraints = false
-        
-        return view
-    }()
-    
     public lazy var textView: UITextView = {
         let textView = UITextView()
         textView.text = "Что надо сделать?"
-        textView.backgroundColor = UIColor(named: "SecondaryBackground")
-        textView.textColor = .lightGray
+        textView.backgroundColor = .appColor(.secondaryBack)
+        textView.textColor = .appColor(.lightGray)
         textView.font = .systemFont(ofSize: 17)
         textView.textContainerInset = UIEdgeInsets(top: 17, left: 16, bottom: 17, right: 16)
         textView.layer.cornerRadius = 16
@@ -53,16 +45,16 @@ class TaskView: UIView {
     }()
     
     public lazy var listStackView: UIStackView = {
-        let view = UIStackView()
-        view.axis = .vertical
-        view.spacing = 0
-        view.distribution = .fill
-        view.layer.cornerRadius = 16
-        view.backgroundColor = UIColor(named: "SecondaryBackground")
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.spacing = 0
+        stackView.distribution = .fill
+        stackView.layer.cornerRadius = 16
+        stackView.backgroundColor = .appColor(.secondaryBack)
         
-        view.translatesAutoresizingMaskIntoConstraints = false
+        stackView.translatesAutoresizingMaskIntoConstraints = false
         
-        return view
+        return stackView
     }()
     
     public lazy var importanceContainerView: UIView = {
@@ -91,13 +83,16 @@ class TaskView: UIView {
         segmentedControl.setTitleTextAttributes([NSAttributedString.Key.font: font], for: .normal)
         
         segmentedControl.insertSegment(with: UIImage(systemName: "arrow.down",
-                                                     withConfiguration: UIImage.SymbolConfiguration(weight: .semibold))?.withTintColor(UIColor(named: "LightGray") ?? UIColor.lightGray,
-                                                                                                                                       renderingMode: .alwaysOriginal),
+                                                     withConfiguration: UIImage.SymbolConfiguration(weight: .semibold))?.withTintColor(.appColor(.lightGray) ?? .lightGray,
+                                                                                    renderingMode: .alwaysOriginal),
                                        at: 0,
                                        animated: false)
         segmentedControl.insertSegment(withTitle: "нет", at: 1, animated: false)
         segmentedControl.insertSegment(with: UIImage(systemName: "exclamationmark.2",
-                                                     withConfiguration: UIImage.SymbolConfiguration(weight: .semibold))?.withTintColor(.red, renderingMode: .alwaysOriginal), at: 2, animated: false)
+                                                     withConfiguration: UIImage.SymbolConfiguration(weight: .semibold))?.withTintColor(.appColor(.red) ?? .red,
+                                                                                    renderingMode: .alwaysOriginal),
+                                       at: 2,
+                                       animated: false)
         
         segmentedControl.selectedSegmentIndex = 1
         
@@ -107,12 +102,12 @@ class TaskView: UIView {
     }()
     
     public lazy var divider: UIView = {
-        let separator = UIView()
-        separator.backgroundColor = UIColor(named: "SeparatorColor")
+        let view = UIView()
+        view.backgroundColor = .appColor(.separator)
         
-        separator.translatesAutoresizingMaskIntoConstraints = false
+        view.translatesAutoresizingMaskIntoConstraints = false
         
-        return separator
+        return view
     }()
     
     public lazy var deadlineContainerView: UIView = {
@@ -123,17 +118,17 @@ class TaskView: UIView {
     }()
     
     public lazy var deadlineStackView: UIStackView = {
-        let stack = UIStackView()
-        stack.axis = .vertical
-        stack.spacing = 0
-        stack.distribution = .fill
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.spacing = 0
+        stackView.distribution = .fill
         
-        stack.translatesAutoresizingMaskIntoConstraints = false
+        stackView.translatesAutoresizingMaskIntoConstraints = false
         
-        return stack
+        return stackView
     }()
     
-    public lazy var deadlineLabel: UILabel = {
+    private lazy var deadlineLabel: UILabel = {
         let label = UILabel()
         label.text = "Сделать до"
         label.font = .systemFont(ofSize: 17)
@@ -144,13 +139,9 @@ class TaskView: UIView {
     }()
     
     public lazy var dateButton: UIButton = {
-        let dateFormatter = DateFormatter()
-        dateFormatter.locale = Locale(identifier: "ru_RU")
-        dateFormatter.dateStyle = .long
-        
         let button = UIButton()
-        button.setTitle("\(dateFormatter.string(from: datePicker.date))", for: .normal)
-        button.setTitleColor(.link, for: .normal)
+        button.setTitle("\(DateFormatter.ruRuLong.string(from: datePicker.date))", for: .normal)
+        button.setTitleColor(.appColor(.blue), for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 13, weight: .medium)
         button.contentHorizontalAlignment = .left
         button.isHidden = true
@@ -170,14 +161,14 @@ class TaskView: UIView {
     }()
     
     public lazy var divider2: UIView = {
-        let separator = UIView()
-        separator.backgroundColor = UIColor(named: "SeparatorColor")
-        separator.isHidden = true
-        separator.alpha = 0
+        let view = UIView()
+        view.backgroundColor = .appColor(.separator)
+        view.isHidden = true
+        view.alpha = 0
         
-        separator.translatesAutoresizingMaskIntoConstraints = false
+        view.translatesAutoresizingMaskIntoConstraints = false
         
-        return separator
+        return view
     }()
     
     public lazy var pickerContainerView: UIView = {
@@ -206,9 +197,9 @@ class TaskView: UIView {
     public lazy var deleteButton: UIButton = {
         let button = UIButton()
         button.setTitle("Удалить", for: .normal)
-        button.setTitleColor(UIColor(named: "LightRed"), for: .normal)
+        button.setTitleColor(.appColor(.red), for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 17)
-        button.backgroundColor = UIColor(named: "SecondaryBackground")
+        button.backgroundColor = .appColor(.secondaryBack)
         button.layer.cornerRadius = 16
         
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -222,8 +213,8 @@ class TaskView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
+        backgroundColor = .appColor(.primaryBack)
         setup()
-        
     }
     
     required init?(coder: NSCoder) {
@@ -231,6 +222,8 @@ class TaskView: UIView {
     }
     
     override func layoutSubviews() {
+        super.layoutSubviews()
+        
         setConstraints()
     }
 
@@ -243,31 +236,26 @@ class TaskView: UIView {
         
         contentView.addSubview(textView)
         contentView.addSubview(listStackView)
+        contentView.addSubview(deleteButton)
         
         listStackView.addArrangedSubview(importanceContainerView)
+        listStackView.addArrangedSubview(divider)
+        listStackView.addArrangedSubview(deadlineContainerView)
+        listStackView.addArrangedSubview(divider2)
+        listStackView.addArrangedSubview(pickerContainerView)
+        
         importanceContainerView.addSubview(importanceLabel)
         importanceContainerView.addSubview(importanceSegmentedControl)
         
-        listStackView.addArrangedSubview(divider)
-        
-        listStackView.addArrangedSubview(deadlineContainerView)
         deadlineContainerView.addSubview(deadlineStackView)
-        deadlineStackView.addArrangedSubview(deadlineLabel)
-        deadlineStackView.addArrangedSubview(dateButton)
         deadlineContainerView.addSubview(deadlineSwitch)
         
-        listStackView.addArrangedSubview(divider2)
-        
-        listStackView.addArrangedSubview(pickerContainerView)
+        deadlineStackView.addArrangedSubview(deadlineLabel)
+        deadlineStackView.addArrangedSubview(dateButton)
         pickerContainerView.addSubview(datePicker)
-        
-        contentView.addSubview(deleteButton)
     }
     
-    public func setConstraints() {
-        
-//        let frameGuide = contentScrollView.frameLayoutGuide
-//        let contentGuide = contentScrollView.contentLayoutGuide
+    private func setConstraints() {
         
         NSLayoutConstraint.activate([
             contentScrollView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
@@ -281,9 +269,6 @@ class TaskView: UIView {
             contentView.bottomAnchor.constraint(equalTo: contentScrollView.bottomAnchor),
             contentView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
             contentView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
-            
-//            contentView.leadingAnchor.constraint(equalTo: frameGuide.leadingAnchor),
-//            contentView.trailingAnchor.constraint(equalTo: frameGuide.trailingAnchor)
         ])
         
         NSLayoutConstraint.activate([
@@ -365,5 +350,4 @@ class TaskView: UIView {
             deleteButton.heightAnchor.constraint(equalToConstant: 56)
         ])
     }
-    
 }

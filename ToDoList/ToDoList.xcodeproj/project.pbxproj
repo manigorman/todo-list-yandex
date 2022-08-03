@@ -17,6 +17,9 @@
 		C52F407A2895C34A00B48390 /* FileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C52F40792895C34A00B48390 /* FileManager.swift */; };
 		C52F40832895C37400B48390 /* ToDoItemTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C52F40822895C37400B48390 /* ToDoItemTests.swift */; };
 		C52F408A2895C3AD00B48390 /* FileCacheTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C52F40892895C3AD00B48390 /* FileCacheTests.swift */; };
+		C587D7D9289AD7B800131168 /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = C587D7D8289AD7B800131168 /* UIColor.swift */; };
+		C5DA7487289AD26200A06FCB /* DateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5DA7486289AD26200A06FCB /* DateFormatter.swift */; };
+		C5DA7489289AD56E00A06FCB /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5DA7488289AD56E00A06FCB /* Constants.swift */; };
 		C5DB39412896F8CD00D086A9 /* TaskView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5DB39402896F8CD00D086A9 /* TaskView.swift */; };
 		C5DB3943289720F400D086A9 /* TaskVC+UITextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5DB3942289720F400D086A9 /* TaskVC+UITextView.swift */; };
 /* End PBXBuildFile section */
@@ -45,6 +48,9 @@
 		C52F40802895C37400B48390 /* ToDoListTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ToDoListTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C52F40822895C37400B48390 /* ToDoItemTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoItemTests.swift; sourceTree = "<group>"; };
 		C52F40892895C3AD00B48390 /* FileCacheTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileCacheTests.swift; sourceTree = "<group>"; };
+		C587D7D8289AD7B800131168 /* UIColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColor.swift; sourceTree = "<group>"; };
+		C5DA7486289AD26200A06FCB /* DateFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFormatter.swift; sourceTree = "<group>"; };
+		C5DA7488289AD56E00A06FCB /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		C5DB39402896F8CD00D086A9 /* TaskView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskView.swift; sourceTree = "<group>"; };
 		C5DB3942289720F400D086A9 /* TaskVC+UITextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TaskVC+UITextView.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -90,6 +96,7 @@
 			children = (
 				C52F405E2895C14300B48390 /* AppDelegate.swift */,
 				C52F40602895C14300B48390 /* SceneDelegate.swift */,
+				C5DA7488289AD56E00A06FCB /* Constants.swift */,
 				C52F407B2895C35000B48390 /* Extensions */,
 				C52F40782895C33900B48390 /* Managers */,
 				C52F40752895C31C00B48390 /* Models */,
@@ -131,6 +138,8 @@
 			children = (
 				C52F40792895C34A00B48390 /* FileManager.swift */,
 				C5DB3942289720F400D086A9 /* TaskVC+UITextView.swift */,
+				C5DA7486289AD26200A06FCB /* DateFormatter.swift */,
+				C587D7D8289AD7B800131168 /* UIColor.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -252,11 +261,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C5DA7487289AD26200A06FCB /* DateFormatter.swift in Sources */,
 				C52F40632895C14300B48390 /* TaskViewController.swift in Sources */,
 				C5DB39412896F8CD00D086A9 /* TaskView.swift in Sources */,
 				C52F405F2895C14300B48390 /* AppDelegate.swift in Sources */,
 				C5DB3943289720F400D086A9 /* TaskVC+UITextView.swift in Sources */,
+				C5DA7489289AD56E00A06FCB /* Constants.swift in Sources */,
 				C52F40742895C30E00B48390 /* ToDoItem.swift in Sources */,
+				C587D7D9289AD7B800131168 /* UIColor.swift in Sources */,
 				C52F407A2895C34A00B48390 /* FileManager.swift in Sources */,
 				C52F40772895C32E00B48390 /* FileCache.swift in Sources */,
 				C52F40612895C14300B48390 /* SceneDelegate.swift in Sources */,
