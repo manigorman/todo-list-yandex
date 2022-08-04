@@ -21,8 +21,8 @@ struct ToDoItem {
          text: String,
          importance: Importance = Importance.basic,
          deadline: Date? = nil,
-         isCompleted: Bool,
-         createdAt: Date,
+         isCompleted: Bool = false,
+         createdAt: Date = Date(),
          changedAt: Date? = nil) {
         self.id = id
         self.text = text
@@ -33,7 +33,6 @@ struct ToDoItem {
         self.changedAt = changedAt
     }
 }
-
 
 enum Importance: String {
     case low, basic, important

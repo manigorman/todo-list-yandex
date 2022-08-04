@@ -76,6 +76,5 @@ extension UIColor {
         case .elevated:
             return UIColor(named: "backElevated")
         }
-        
     }
 }

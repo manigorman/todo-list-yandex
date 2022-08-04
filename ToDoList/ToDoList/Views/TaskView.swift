@@ -8,10 +8,12 @@
 import UIKit
 
 final class TaskView: UIView {
-
+    
     // MARK: - Properties
     
-    public lazy var contentScrollView: UIScrollView = {
+    var delegate: TaskViewDelegate?
+    
+    private lazy var contentScrollView: UIScrollView = {
         let scrollView = UIScrollView()
         
         scrollView.translatesAutoresizingMaskIntoConstraints = false
@@ -19,7 +21,7 @@ final class TaskView: UIView {
         return scrollView
     }()
     
-    public lazy var contentView: UIView = {
+    private lazy var contentView: UIView = {
         let view = UIView()
         
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -27,11 +29,9 @@ final class TaskView: UIView {
         return view
     }()
     
-    public lazy var textView: UITextView = {
+    private lazy var textView: UITextView = {
         let textView = UITextView()
-        textView.text = "Что надо сделать?"
         textView.backgroundColor = .appColor(.secondaryBack)
-        textView.textColor = .appColor(.lightGray)
         textView.font = .systemFont(ofSize: 17)
         textView.textContainerInset = UIEdgeInsets(top: 17, left: 16, bottom: 17, right: 16)
         textView.layer.cornerRadius = 16
@@ -44,7 +44,7 @@ final class TaskView: UIView {
         return textView
     }()
     
-    public lazy var listStackView: UIStackView = {
+    private lazy var listStackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .vertical
         stackView.spacing = 0
@@ -57,7 +57,7 @@ final class TaskView: UIView {
         return stackView
     }()
     
-    public lazy var importanceContainerView: UIView = {
+    private lazy var importanceContainerView: UIView = {
         let view = UIView()
         
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -65,7 +65,7 @@ final class TaskView: UIView {
         return view
     }()
     
-    public lazy var importanceLabel: UILabel = {
+    private lazy var importanceLabel: UILabel = {
         let label = UILabel()
         label.text = "Важность"
         label.font = .systemFont(ofSize: 17)
@@ -76,32 +76,28 @@ final class TaskView: UIView {
         return label
     }()
     
-    public lazy var importanceSegmentedControl: UISegmentedControl = {
+    private lazy var importanceSegmentedControl: UISegmentedControl = {
         let segmentedControl = UISegmentedControl()
         let font = UIFont.systemFont(ofSize: 15, weight: .medium)
         
         segmentedControl.setTitleTextAttributes([NSAttributedString.Key.font: font], for: .normal)
         
         segmentedControl.insertSegment(with: UIImage(systemName: "arrow.down",
-                                                     withConfiguration: UIImage.SymbolConfiguration(weight: .semibold))?.withTintColor(.appColor(.lightGray) ?? .lightGray,
-                                                                                    renderingMode: .alwaysOriginal),
+                                                     withConfiguration: UIImage.SymbolConfiguration(weight: .semibold))?.withTintColor(.appColor(.lightGray) ?? .lightGray, renderingMode: .alwaysOriginal),
                                        at: 0,
                                        animated: false)
         segmentedControl.insertSegment(withTitle: "нет", at: 1, animated: false)
         segmentedControl.insertSegment(with: UIImage(systemName: "exclamationmark.2",
-                                                     withConfiguration: UIImage.SymbolConfiguration(weight: .semibold))?.withTintColor(.appColor(.red) ?? .red,
-                                                                                    renderingMode: .alwaysOriginal),
+                                                     withConfiguration: UIImage.SymbolConfiguration(weight: .semibold))?.withTintColor(.appColor(.red) ?? .red, renderingMode: .alwaysOriginal),
                                        at: 2,
                                        animated: false)
-        
-        segmentedControl.selectedSegmentIndex = 1
         
         segmentedControl.translatesAutoresizingMaskIntoConstraints = false
         
         return segmentedControl
     }()
     
-    public lazy var divider: UIView = {
+    private lazy var divider: UIView = {
         let view = UIView()
         view.backgroundColor = .appColor(.separator)
         
@@ -110,14 +106,14 @@ final class TaskView: UIView {
         return view
     }()
     
-    public lazy var deadlineContainerView: UIView = {
+    private lazy var deadlineContainerView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         
         return view
     }()
     
-    public lazy var deadlineStackView: UIStackView = {
+    private lazy var deadlineStackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .vertical
         stackView.spacing = 0
@@ -138,63 +134,56 @@ final class TaskView: UIView {
         return label
     }()
     
-    public lazy var dateButton: UIButton = {
+    private lazy var dateButton: UIButton = {
         let button = UIButton()
-        button.setTitle("\(DateFormatter.ruRuLong.string(from: datePicker.date))", for: .normal)
         button.setTitleColor(.appColor(.blue), for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 13, weight: .medium)
         button.contentHorizontalAlignment = .left
-        button.isHidden = true
-        button.alpha = 0
         
         button.translatesAutoresizingMaskIntoConstraints = false
         
         return button
     }()
     
-    public lazy var deadlineSwitch: UISwitch = {
+    private lazy var deadlineSwitch: UISwitch = {
         let toggle = UISwitch()
+        
         
         toggle.translatesAutoresizingMaskIntoConstraints = false
         
         return toggle
     }()
     
-    public lazy var divider2: UIView = {
+    private lazy var divider2: UIView = {
         let view = UIView()
         view.backgroundColor = .appColor(.separator)
-        view.isHidden = true
-        view.alpha = 0
         
         view.translatesAutoresizingMaskIntoConstraints = false
         
         return view
     }()
     
-    public lazy var pickerContainerView: UIView = {
+    private lazy var pickerContainerView: UIView = {
         let view = UIView()
-        view.isHidden = true
-        view.alpha = 0
         
         view.translatesAutoresizingMaskIntoConstraints = false
         
         return view
     }()
     
-    public lazy var datePicker: UIDatePicker = {
+    private lazy var datePicker: UIDatePicker = {
         let picker = UIDatePicker()
         picker.preferredDatePickerStyle = .inline
         picker.datePickerMode = .date
         picker.locale = Locale(identifier: "ru_RU")
         picker.minimumDate = Date()
-        picker.date = Calendar.current.date(byAdding: .day, value: 1, to: Date()) ?? Date()
         
         picker.translatesAutoresizingMaskIntoConstraints = false
         
         return picker
     }()
     
-    public lazy var deleteButton: UIButton = {
+    private lazy var deleteButton: UIButton = {
         let button = UIButton()
         button.setTitle("Удалить", for: .normal)
         button.setTitleColor(.appColor(.red), for: .normal)
@@ -213,10 +202,22 @@ final class TaskView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        backgroundColor = .appColor(.primaryBack)
-        setup()
+        setupView()
+        
+        defaultConfigure()
+        
+        deadlineSwitch.addTarget(self, action: #selector(handleDateSwitch(_:)), for: .valueChanged)
+        dateButton.addTarget(self, action: #selector(handleDateButton), for: .touchUpInside)
+        datePicker.addTarget(self, action: #selector(handleDatePicker(_:)), for: .valueChanged)
+        deleteButton.addTarget(self, action: #selector(handleDelete), for: .touchUpInside)
+        
+        textView.delegate = self
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
+    @available(*, unavailable)
     required init?(coder: NSCoder) {
         super.init(coder: coder)
     }
@@ -226,10 +227,83 @@ final class TaskView: UIView {
         
         setConstraints()
     }
-
+    
+    // MARK: - Selectors
+    
+    @objc private func handleDateSwitch(_ sender: UISwitch) {
+        
+        UIView.animate(withDuration: 0.3) {
+            if sender.isOn {
+                self.showDateButton()
+            } else {
+                self.divider2.isHidden = true
+                self.divider2.alpha = 0
+                self.pickerContainerView.isHidden = true
+                self.pickerContainerView.alpha = 0
+                self.dateButton.isHidden = true
+                self.datePicker.isHidden = true
+                self.dateButton.alpha = 0
+                self.listStackView.layoutIfNeeded()
+            }
+        }
+    }
+    
+    @objc private func handleDateButton() {
+        
+        UIView.animate(withDuration: 0.3) {
+            self.pickerContainerView.isHidden = false
+            self.pickerContainerView.alpha = 1
+            self.divider2.isHidden = false
+            self.datePicker.isHidden = false
+            self.divider2.alpha = 1
+            self.listStackView.layoutIfNeeded()
+            
+        }
+    }
+    
+    @objc private func handleDatePicker(_ sender: UIDatePicker) {
+        self.dateButton.setTitle(DateFormatter.ruRuLong.string(from: sender.date), for: .normal)
+    }
+    
+    @objc private func handleDelete() {
+        self.defaultConfigure()
+        textView.resignFirstResponder()
+        delegate?.didTapDeleteButton()
+    }
+    
+    @objc func keyboardWillShow(notification: NSNotification) {
+        guard let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue
+        else {
+            return
+        }
+        
+        let tap = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        addGestureRecognizer(tap)
+        
+        let contentInsets = UIEdgeInsets(top: 0.0, left: 0.0, bottom: keyboardSize.height , right: 0.0)
+        contentScrollView.contentInset = contentInsets
+        contentScrollView.scrollIndicatorInsets = contentInsets
+    }
+    
+    @objc func keyboardWillHide(notification: NSNotification) {
+        let contentInsets = UIEdgeInsets(top: 0.0, left: 0.0, bottom: 0.0, right: 0.0)
+        
+        contentScrollView.contentInset = contentInsets
+        contentScrollView.scrollIndicatorInsets = contentInsets
+    }
+    
+    @objc func dismissKeyboard() {
+        endEditing(true)
+        for recognizer in gestureRecognizers ?? [] {
+            removeGestureRecognizer(recognizer)
+        }
+    }
+    
     // MARK: - Methods
     
-    private func setup() {
+    private func setupView() {
+        backgroundColor = .appColor(.primaryBack)
+        
         addSubview(contentScrollView)
         
         contentScrollView.addSubview(contentView)
@@ -272,33 +346,33 @@ final class TaskView: UIView {
         ])
         
         NSLayoutConstraint.activate([
-            textView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 16),
-            textView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            textView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
-            textView.heightAnchor.constraint(greaterThanOrEqualToConstant: 120)
+            textView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: Constants.constantPositive),
+            textView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Constants.constantPositive),
+            textView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: Constants.constantNegative),
+            textView.heightAnchor.constraint(greaterThanOrEqualToConstant: Constants.textViewMinHeight)
         ])
         
         NSLayoutConstraint.activate([
-            listStackView.topAnchor.constraint(equalTo: textView.bottomAnchor, constant: 16),
-            listStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            listStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+            listStackView.topAnchor.constraint(equalTo: textView.bottomAnchor, constant: Constants.constantPositive),
+            listStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Constants.constantPositive),
+            listStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: Constants.constantNegative),
         ])
         
         NSLayoutConstraint.activate([
             importanceContainerView.topAnchor.constraint(equalTo: listStackView.topAnchor),
             importanceContainerView.leadingAnchor.constraint(equalTo: listStackView.leadingAnchor),
             importanceContainerView.trailingAnchor.constraint(equalTo: listStackView.trailingAnchor),
-            importanceContainerView.heightAnchor.constraint(equalToConstant: 56),
+            importanceContainerView.heightAnchor.constraint(equalToConstant: Constants.containerHeight),
             
             importanceLabel.topAnchor.constraint(equalTo: importanceContainerView.topAnchor, constant: 17),
-            importanceLabel.leadingAnchor.constraint(equalTo: importanceContainerView.leadingAnchor, constant: 16),
+            importanceLabel.leadingAnchor.constraint(equalTo: importanceContainerView.leadingAnchor, constant: Constants.constantPositive),
             importanceLabel.trailingAnchor.constraint(equalTo: importanceSegmentedControl.leadingAnchor),
             importanceLabel.heightAnchor.constraint(equalToConstant: 22),
             
             importanceSegmentedControl.topAnchor.constraint(equalTo: importanceContainerView.topAnchor, constant: 10),
             importanceSegmentedControl.trailingAnchor.constraint(equalTo: importanceContainerView.trailingAnchor, constant: -12),
-            importanceSegmentedControl.widthAnchor.constraint(equalToConstant: 150),
-            importanceSegmentedControl.heightAnchor.constraint(equalToConstant: 36)
+            importanceSegmentedControl.widthAnchor.constraint(equalToConstant: Constants.segmentedControlWidth),
+            importanceSegmentedControl.heightAnchor.constraint(equalToConstant: Constants.segmentedControlHeight)
         ])
         
         NSLayoutConstraint.activate([
@@ -312,16 +386,16 @@ final class TaskView: UIView {
             deadlineContainerView.topAnchor.constraint(equalTo: divider.bottomAnchor),
             deadlineContainerView.leadingAnchor.constraint(equalTo: listStackView.leadingAnchor),
             deadlineContainerView.trailingAnchor.constraint(equalTo: listStackView.trailingAnchor),
-            deadlineContainerView.heightAnchor.constraint(equalToConstant: 56),
+            deadlineContainerView.heightAnchor.constraint(equalToConstant: Constants.containerHeight),
             
             deadlineSwitch.topAnchor.constraint(equalTo: deadlineContainerView.topAnchor, constant: 13.5),
             deadlineSwitch.trailingAnchor.constraint(equalTo: listStackView.trailingAnchor, constant: -12),
-            deadlineSwitch.widthAnchor.constraint(equalToConstant: 51),
-            deadlineSwitch.heightAnchor.constraint(equalToConstant: 31),
+            deadlineSwitch.widthAnchor.constraint(equalToConstant: Constants.switchWidth),
+            deadlineSwitch.heightAnchor.constraint(equalToConstant: Constants.switchHeight),
             
             deadlineStackView.centerYAnchor.constraint(equalTo: deadlineContainerView.centerYAnchor),
-            deadlineStackView.leadingAnchor.constraint(equalTo: listStackView.leadingAnchor, constant: 16),
-            deadlineStackView.trailingAnchor.constraint(equalTo: deadlineSwitch.leadingAnchor, constant: -16),
+            deadlineStackView.leadingAnchor.constraint(equalTo: listStackView.leadingAnchor, constant: Constants.constantPositive),
+            deadlineStackView.trailingAnchor.constraint(equalTo: deadlineSwitch.leadingAnchor, constant: Constants.constantNegative),
         ])
         
         NSLayoutConstraint.activate([
@@ -337,17 +411,93 @@ final class TaskView: UIView {
             pickerContainerView.trailingAnchor.constraint(equalTo: listStackView.trailingAnchor),
             
             datePicker.topAnchor.constraint(equalTo: pickerContainerView.topAnchor),
-            datePicker.leadingAnchor.constraint(equalTo: pickerContainerView.leadingAnchor, constant: 16),
-            datePicker.trailingAnchor.constraint(equalTo: pickerContainerView.trailingAnchor, constant: -16),
+            datePicker.leadingAnchor.constraint(equalTo: pickerContainerView.leadingAnchor, constant: Constants.constantPositive),
+            datePicker.trailingAnchor.constraint(equalTo: pickerContainerView.trailingAnchor, constant: Constants.constantNegative),
             datePicker.bottomAnchor.constraint(equalTo: pickerContainerView.bottomAnchor)
         ])
         
         NSLayoutConstraint.activate([
-            deleteButton.topAnchor.constraint(equalTo: listStackView.bottomAnchor, constant: 16),
-            deleteButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            deleteButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
-            deleteButton.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -16),
-            deleteButton.heightAnchor.constraint(equalToConstant: 56)
+            deleteButton.topAnchor.constraint(equalTo: listStackView.bottomAnchor, constant: Constants.constantPositive),
+            deleteButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Constants.constantPositive),
+            deleteButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: Constants.constantNegative),
+            deleteButton.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: Constants.constantNegative),
+            deleteButton.heightAnchor.constraint(equalToConstant: Constants.containerHeight)
         ])
     }
+    
+    public func defaultConfigure() {
+        UIView.animate(withDuration: 0.3) {
+            self.textView.text = "Что надо сделать?"
+            self.textView.textColor = .appColor(.tertiary)
+            
+            self.importanceSegmentedControl.selectedSegmentIndex = 1
+            
+            self.dateButton.isHidden = true
+            self.dateButton.alpha = 0
+            
+            self.deadlineSwitch.isOn = false
+            
+            
+            self.divider2.isHidden = true
+            self.divider2.alpha = 0
+            
+            self.pickerContainerView.isHidden = true
+            self.pickerContainerView.alpha = 0
+            
+            self.datePicker.date = Calendar.current.date(byAdding: .day, value: 1, to: Date()) ?? Date()
+            
+            self.dateButton.setTitle(DateFormatter.ruRuLong.string(from: self.datePicker.date), for: .normal)
+        }
+    }
+    
+    public func configure(with task: ToDoItem) {
+        textView.text = task.text
+        
+        switch task.importance {
+        case .low:
+            importanceSegmentedControl.selectedSegmentIndex = 0
+        case .basic:
+            importanceSegmentedControl.selectedSegmentIndex = 1
+        case .important:
+            importanceSegmentedControl.selectedSegmentIndex = 2
+        }
+        
+        guard let deadline = task.deadline else {
+            datePicker.date = Calendar.current.date(byAdding: .day, value: 1, to: Date()) ?? Date()
+            return
+        }
+        
+        deadlineSwitch.isOn = true
+        dateButton.setTitle(DateFormatter.ruRuLong.string(from: deadline), for: .normal)
+        datePicker.date = deadline
+        
+        showDateButton()
+    }
+    
+    private func showDateButton() {
+        dateButton.isHidden = false
+        dateButton.alpha = 1
+        listStackView.layoutIfNeeded()
+    }
+    
+    public func getTask() -> ToDoItem {
+        let importance: Importance
+        
+        switch importanceSegmentedControl.selectedSegmentIndex {
+        case 0:
+            importance = Importance.low
+        case 2:
+            importance = Importance.important
+        default:
+            importance = Importance.basic
+        }
+        
+        return ToDoItem(text: textView.textColor == .appColor(.tertiary) ? "" : textView.text,
+                        importance: importance,
+                        deadline: deadlineSwitch.isOn ? datePicker.date : nil)
+    }
+}
+
+protocol TaskViewDelegate {
+    func didTapDeleteButton()
 }

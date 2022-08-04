@@ -21,7 +21,7 @@
 		C5DA7487289AD26200A06FCB /* DateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5DA7486289AD26200A06FCB /* DateFormatter.swift */; };
 		C5DA7489289AD56E00A06FCB /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5DA7488289AD56E00A06FCB /* Constants.swift */; };
 		C5DB39412896F8CD00D086A9 /* TaskView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5DB39402896F8CD00D086A9 /* TaskView.swift */; };
-		C5DB3943289720F400D086A9 /* TaskVC+UITextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5DB3942289720F400D086A9 /* TaskVC+UITextView.swift */; };
+		C5E7C3EF289BD11200C540FA /* TaskView+TextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5E7C3EE289BD11200C540FA /* TaskView+TextView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -52,7 +52,7 @@
 		C5DA7486289AD26200A06FCB /* DateFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFormatter.swift; sourceTree = "<group>"; };
 		C5DA7488289AD56E00A06FCB /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		C5DB39402896F8CD00D086A9 /* TaskView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskView.swift; sourceTree = "<group>"; };
-		C5DB3942289720F400D086A9 /* TaskVC+UITextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TaskVC+UITextView.swift"; sourceTree = "<group>"; };
+		C5E7C3EE289BD11200C540FA /* TaskView+TextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TaskView+TextView.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -137,9 +137,9 @@
 			isa = PBXGroup;
 			children = (
 				C52F40792895C34A00B48390 /* FileManager.swift */,
-				C5DB3942289720F400D086A9 /* TaskVC+UITextView.swift */,
 				C5DA7486289AD26200A06FCB /* DateFormatter.swift */,
 				C587D7D8289AD7B800131168 /* UIColor.swift */,
+				C5E7C3EE289BD11200C540FA /* TaskView+TextView.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -265,8 +265,8 @@
 				C52F40632895C14300B48390 /* TaskViewController.swift in Sources */,
 				C5DB39412896F8CD00D086A9 /* TaskView.swift in Sources */,
 				C52F405F2895C14300B48390 /* AppDelegate.swift in Sources */,
-				C5DB3943289720F400D086A9 /* TaskVC+UITextView.swift in Sources */,
 				C5DA7489289AD56E00A06FCB /* Constants.swift in Sources */,
+				C5E7C3EF289BD11200C540FA /* TaskView+TextView.swift in Sources */,
 				C52F40742895C30E00B48390 /* ToDoItem.swift in Sources */,
 				C587D7D9289AD7B800131168 /* UIColor.swift in Sources */,
 				C52F407A2895C34A00B48390 /* FileManager.swift in Sources */,
