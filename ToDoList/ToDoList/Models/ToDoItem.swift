@@ -21,8 +21,8 @@ struct ToDoItem {
          text: String,
          importance: Importance = Importance.basic,
          deadline: Date? = nil,
-         isCompleted: Bool,
-         createdAt: Date,
+         isCompleted: Bool = false,
+         createdAt: Date = Date(),
          changedAt: Date? = nil) {
         self.id = id
         self.text = text
@@ -34,10 +34,8 @@ struct ToDoItem {
     }
 }
 
-extension ToDoItem {
-    enum Importance: String {
-        case low, basic, important
-    }
+enum Importance: String {
+    case low, basic, important
 }
 
 extension ToDoItem {
@@ -80,7 +78,7 @@ extension ToDoItem {
             return nil
         }
         
-        let importance = dict["importance"] as? String ?? "basic"
+        let importance = (dict["importance"] as? String).flatMap{ Importance(rawValue: $0) } ?? .basic
         
         let deadline: Date?
         if let dead = dict["deadline"] as? String,
@@ -100,7 +98,7 @@ extension ToDoItem {
         
         return ToDoItem(id: id,
                         text: text,
-                        importance: Importance(rawValue: importance) ?? Importance.basic,
+                        importance: importance,
                         deadline: deadline,
                         isCompleted: isCompleted,
                         createdAt: Date(timeIntervalSince1970: createdAt),
