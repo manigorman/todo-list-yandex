@@ -33,10 +33,10 @@ final class TaskView: UIView {
         let textView = UITextView()
         textView.backgroundColor = .appColor(.secondaryBack)
         textView.font = .systemFont(ofSize: 17)
-        textView.textContainerInset = UIEdgeInsets(top: 17, left: 16, bottom: 17, right: 16)
+        textView.textContainerInset = UIEdgeInsets(top: LayoutConstants.topInset, left: LayoutConstants.leadingInset, bottom: LayoutConstants.topInset, right: LayoutConstants.leadingInset)
         textView.layer.cornerRadius = 16
         textView.isScrollEnabled = false
-        textView.autocapitalizationType = .none
+        textView.autocapitalizationType = .sentences
         textView.autocorrectionType = .no
         
         textView.translatesAutoresizingMaskIntoConstraints = false
@@ -82,13 +82,11 @@ final class TaskView: UIView {
         
         segmentedControl.setTitleTextAttributes([NSAttributedString.Key.font: font], for: .normal)
         
-        segmentedControl.insertSegment(with: UIImage(systemName: "arrow.down",
-                                                     withConfiguration: UIImage.SymbolConfiguration(weight: .semibold))?.withTintColor(.appColor(.lightGray) ?? .lightGray, renderingMode: .alwaysOriginal),
+        segmentedControl.insertSegment(with: SFSymbols.lowImage,
                                        at: 0,
                                        animated: false)
         segmentedControl.insertSegment(withTitle: "нет", at: 1, animated: false)
-        segmentedControl.insertSegment(with: UIImage(systemName: "exclamationmark.2",
-                                                     withConfiguration: UIImage.SymbolConfiguration(weight: .semibold))?.withTintColor(.appColor(.red) ?? .red, renderingMode: .alwaysOriginal),
+        segmentedControl.insertSegment(with: SFSymbols.importantImage,
                                        at: 2,
                                        animated: false)
         
@@ -196,6 +194,10 @@ final class TaskView: UIView {
         return button
     }()
     
+    // Constraints
+    private lazy var compactConstraints: [NSLayoutConstraint] = []
+    private lazy var regularConstraints: [NSLayoutConstraint] = []
+    private lazy var sharedConstraints: [NSLayoutConstraint] = []
     
     // MARK: - Init
     
@@ -203,6 +205,7 @@ final class TaskView: UIView {
         super.init(frame: frame)
         
         setupView()
+        setConstraints()
         
         defaultConfigure()
         
@@ -222,10 +225,10 @@ final class TaskView: UIView {
         super.init(coder: coder)
     }
     
-    override func layoutSubviews() {
-        super.layoutSubviews()
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
         
-        setConstraints()
+        self.setConstraints()
     }
     
     // MARK: - Selectors
@@ -257,7 +260,6 @@ final class TaskView: UIView {
             self.datePicker.isHidden = false
             self.divider2.alpha = 1
             self.listStackView.layoutIfNeeded()
-            
         }
     }
     
@@ -280,13 +282,13 @@ final class TaskView: UIView {
         let tap = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         addGestureRecognizer(tap)
         
-        let contentInsets = UIEdgeInsets(top: 0.0, left: 0.0, bottom: keyboardSize.height , right: 0.0)
+        let contentInsets = UIEdgeInsets(top: 0, left: 0, bottom: keyboardSize.height , right: 0)
         contentScrollView.contentInset = contentInsets
         contentScrollView.scrollIndicatorInsets = contentInsets
     }
     
     @objc func keyboardWillHide(notification: NSNotification) {
-        let contentInsets = UIEdgeInsets(top: 0.0, left: 0.0, bottom: 0.0, right: 0.0)
+        let contentInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
         
         contentScrollView.contentInset = contentInsets
         contentScrollView.scrollIndicatorInsets = contentInsets
@@ -327,102 +329,114 @@ final class TaskView: UIView {
         deadlineStackView.addArrangedSubview(deadlineLabel)
         deadlineStackView.addArrangedSubview(dateButton)
         pickerContainerView.addSubview(datePicker)
-    }
-    
-    private func setConstraints() {
         
-        NSLayoutConstraint.activate([
+        sharedConstraints.append(contentsOf: [
             contentScrollView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
             contentScrollView.bottomAnchor.constraint(equalTo: bottomAnchor),
             contentScrollView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            contentScrollView.trailingAnchor.constraint(equalTo: trailingAnchor)
-        ])
-        
-        NSLayoutConstraint.activate([
+            contentScrollView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            
             contentView.topAnchor.constraint(equalTo: contentScrollView.topAnchor),
             contentView.bottomAnchor.constraint(equalTo: contentScrollView.bottomAnchor),
             contentView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
             contentView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
+            
+            textView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: LayoutConstants.topInset),
+            textView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: LayoutConstants.leadingInset),
+            textView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: LayoutConstants.trailingInset),
+            textView.heightAnchor.constraint(greaterThanOrEqualToConstant: LayoutConstants.textViewMinHeight)
         ])
         
-        NSLayoutConstraint.activate([
-            textView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: Constants.constantPositive),
-            textView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Constants.constantPositive),
-            textView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: Constants.constantNegative),
-            textView.heightAnchor.constraint(greaterThanOrEqualToConstant: Constants.textViewMinHeight)
-        ])
-        
-        NSLayoutConstraint.activate([
-            listStackView.topAnchor.constraint(equalTo: textView.bottomAnchor, constant: Constants.constantPositive),
-            listStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Constants.constantPositive),
-            listStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: Constants.constantNegative),
-        ])
-        
-        NSLayoutConstraint.activate([
+        compactConstraints.append(contentsOf: [
+            textView.heightAnchor.constraint(greaterThanOrEqualToConstant: LayoutConstants.textViewMinHeight),
+            
+            listStackView.topAnchor.constraint(equalTo: textView.bottomAnchor, constant: LayoutConstants.topInset),
+            listStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: LayoutConstants.leadingInset),
+            listStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: LayoutConstants.trailingInset),
+            
             importanceContainerView.topAnchor.constraint(equalTo: listStackView.topAnchor),
             importanceContainerView.leadingAnchor.constraint(equalTo: listStackView.leadingAnchor),
             importanceContainerView.trailingAnchor.constraint(equalTo: listStackView.trailingAnchor),
-            importanceContainerView.heightAnchor.constraint(equalToConstant: Constants.containerHeight),
+            importanceContainerView.heightAnchor.constraint(equalToConstant: LayoutConstants.containerHeight),
             
-            importanceLabel.topAnchor.constraint(equalTo: importanceContainerView.topAnchor, constant: 17),
-            importanceLabel.leadingAnchor.constraint(equalTo: importanceContainerView.leadingAnchor, constant: Constants.constantPositive),
+            importanceLabel.centerYAnchor.constraint(equalTo: importanceContainerView.centerYAnchor),
+            importanceLabel.leadingAnchor.constraint(equalTo: importanceContainerView.leadingAnchor, constant: LayoutConstants.leadingInset),
             importanceLabel.trailingAnchor.constraint(equalTo: importanceSegmentedControl.leadingAnchor),
             importanceLabel.heightAnchor.constraint(equalToConstant: 22),
             
-            importanceSegmentedControl.topAnchor.constraint(equalTo: importanceContainerView.topAnchor, constant: 10),
-            importanceSegmentedControl.trailingAnchor.constraint(equalTo: importanceContainerView.trailingAnchor, constant: -12),
-            importanceSegmentedControl.widthAnchor.constraint(equalToConstant: Constants.segmentedControlWidth),
-            importanceSegmentedControl.heightAnchor.constraint(equalToConstant: Constants.segmentedControlHeight)
-        ])
-        
-        NSLayoutConstraint.activate([
+            importanceSegmentedControl.centerYAnchor.constraint(equalTo: importanceContainerView.centerYAnchor),
+            importanceSegmentedControl.trailingAnchor.constraint(equalTo: importanceContainerView.trailingAnchor, constant: LayoutConstants.controlTrailingInset),
+            importanceSegmentedControl.widthAnchor.constraint(equalToConstant: LayoutConstants.segmentedControlWidth),
+            importanceSegmentedControl.heightAnchor.constraint(equalToConstant: LayoutConstants.segmentedControlHeight),
+            
             divider.topAnchor.constraint(equalTo: importanceContainerView.bottomAnchor),
             divider.leadingAnchor.constraint(equalTo: listStackView.leadingAnchor),
             divider.trailingAnchor.constraint(equalTo: listStackView.trailingAnchor),
-            divider.heightAnchor.constraint(equalToConstant: 1)
-        ])
-        
-        NSLayoutConstraint.activate([
+            divider.heightAnchor.constraint(equalToConstant: LayoutConstants.dividerHeight),
+            
             deadlineContainerView.topAnchor.constraint(equalTo: divider.bottomAnchor),
             deadlineContainerView.leadingAnchor.constraint(equalTo: listStackView.leadingAnchor),
             deadlineContainerView.trailingAnchor.constraint(equalTo: listStackView.trailingAnchor),
-            deadlineContainerView.heightAnchor.constraint(equalToConstant: Constants.containerHeight),
+            deadlineContainerView.heightAnchor.constraint(equalToConstant: LayoutConstants.containerHeight),
             
-            deadlineSwitch.topAnchor.constraint(equalTo: deadlineContainerView.topAnchor, constant: 13.5),
-            deadlineSwitch.trailingAnchor.constraint(equalTo: listStackView.trailingAnchor, constant: -12),
-            deadlineSwitch.widthAnchor.constraint(equalToConstant: Constants.switchWidth),
-            deadlineSwitch.heightAnchor.constraint(equalToConstant: Constants.switchHeight),
+            deadlineSwitch.centerYAnchor.constraint(equalTo: deadlineContainerView.centerYAnchor),
+            deadlineSwitch.trailingAnchor.constraint(equalTo: listStackView.trailingAnchor, constant: LayoutConstants.controlTrailingInset),
+            deadlineSwitch.widthAnchor.constraint(equalToConstant: LayoutConstants.switchWidth),
+            deadlineSwitch.heightAnchor.constraint(equalToConstant: LayoutConstants.switchHeight),
             
             deadlineStackView.centerYAnchor.constraint(equalTo: deadlineContainerView.centerYAnchor),
-            deadlineStackView.leadingAnchor.constraint(equalTo: listStackView.leadingAnchor, constant: Constants.constantPositive),
-            deadlineStackView.trailingAnchor.constraint(equalTo: deadlineSwitch.leadingAnchor, constant: Constants.constantNegative),
-        ])
-        
-        NSLayoutConstraint.activate([
+            deadlineStackView.leadingAnchor.constraint(equalTo: listStackView.leadingAnchor, constant: LayoutConstants.leadingInset),
+            deadlineStackView.trailingAnchor.constraint(equalTo: deadlineSwitch.leadingAnchor, constant: LayoutConstants.trailingInset),
+            
             divider2.topAnchor.constraint(equalTo: deadlineContainerView.bottomAnchor),
             divider2.leadingAnchor.constraint(equalTo: listStackView.leadingAnchor),
             divider2.trailingAnchor.constraint(equalTo: listStackView.trailingAnchor),
-            divider2.heightAnchor.constraint(equalToConstant: 1)
-        ])
-        
-        NSLayoutConstraint.activate([
+            divider2.heightAnchor.constraint(equalToConstant: LayoutConstants.dividerHeight),
+            
             pickerContainerView.topAnchor.constraint(equalTo: divider2.bottomAnchor),
             pickerContainerView.leadingAnchor.constraint(equalTo: listStackView.leadingAnchor),
             pickerContainerView.trailingAnchor.constraint(equalTo: listStackView.trailingAnchor),
             
             datePicker.topAnchor.constraint(equalTo: pickerContainerView.topAnchor),
-            datePicker.leadingAnchor.constraint(equalTo: pickerContainerView.leadingAnchor, constant: Constants.constantPositive),
-            datePicker.trailingAnchor.constraint(equalTo: pickerContainerView.trailingAnchor, constant: Constants.constantNegative),
-            datePicker.bottomAnchor.constraint(equalTo: pickerContainerView.bottomAnchor)
+            datePicker.leadingAnchor.constraint(equalTo: pickerContainerView.leadingAnchor, constant: LayoutConstants.leadingInset),
+            datePicker.trailingAnchor.constraint(equalTo: pickerContainerView.trailingAnchor, constant: LayoutConstants.trailingInset),
+            datePicker.bottomAnchor.constraint(equalTo: pickerContainerView.bottomAnchor),
+            
+            deleteButton.topAnchor.constraint(equalTo: listStackView.bottomAnchor, constant: LayoutConstants.topInset),
+            deleteButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: LayoutConstants.leadingInset),
+            deleteButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: LayoutConstants.trailingInset),
+            deleteButton.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: LayoutConstants.bottomInset),
+            deleteButton.heightAnchor.constraint(equalToConstant: LayoutConstants.containerHeight)
         ])
         
-        NSLayoutConstraint.activate([
-            deleteButton.topAnchor.constraint(equalTo: listStackView.bottomAnchor, constant: Constants.constantPositive),
-            deleteButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Constants.constantPositive),
-            deleteButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: Constants.constantNegative),
-            deleteButton.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: Constants.constantNegative),
-            deleteButton.heightAnchor.constraint(equalToConstant: Constants.containerHeight)
+        regularConstraints.append(contentsOf: [
+            textView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
         ])
+    }
+    
+    public func setConstraints() {
+        if (!sharedConstraints[0].isActive) {
+            NSLayoutConstraint.activate(sharedConstraints)
+        }
+        if traitCollection.horizontalSizeClass == .compact && traitCollection.verticalSizeClass == .regular {
+            if regularConstraints.count > 0 && regularConstraints[0].isActive {
+                NSLayoutConstraint.deactivate(regularConstraints)
+            }
+            self.listStackView.isHidden = false
+            self.deleteButton.isHidden = false
+            textView.isScrollEnabled = false
+            
+            NSLayoutConstraint.activate(self.compactConstraints)
+        } else {
+            if compactConstraints.count > 0 && compactConstraints[0].isActive {
+                NSLayoutConstraint.deactivate(compactConstraints)
+            }
+            self.listStackView.isHidden = true
+            self.deleteButton.isHidden = true
+            textView.isScrollEnabled = true
+            
+            NSLayoutConstraint.activate(self.regularConstraints)
+        }
     }
     
     public func defaultConfigure() {
@@ -492,11 +506,13 @@ final class TaskView: UIView {
             importance = Importance.basic
         }
         
-        return ToDoItem(text: textView.textColor == .appColor(.tertiary) ? "" : textView.text,
+        return ToDoItem(text: textView.text == "Что надо сделать?" ? "" : textView.text,
                         importance: importance,
                         deadline: deadlineSwitch.isOn ? datePicker.date : nil)
     }
 }
+
+// MARK: - Protocols
 
 protocol TaskViewDelegate {
     func didTapDeleteButton()

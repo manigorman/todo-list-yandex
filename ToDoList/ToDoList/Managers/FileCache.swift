@@ -27,6 +27,8 @@ final class FileCache {
         } else {
             self.list.append(toDoItem)
         }
+        
+        NotificationCenter.default.post(name: Notification.Name(NotificationKeys.fileCacheNotificationKey), object: self)
     }
     
     @discardableResult public func removeItem(with id: UUID) -> ToDoItem? {
@@ -35,8 +37,11 @@ final class FileCache {
             print("There is no such item")
             return nil
         }
+        let removedObject = self.list.remove(at: index)
         
-        return self.list.remove(at: index)
+        NotificationCenter.default.post(name: Notification.Name(NotificationKeys.fileCacheNotificationKey), object: self)
+        
+        return removedObject
     }
     
     public func saveJSONItems(to file: String) throws {
