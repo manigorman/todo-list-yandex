@@ -11,66 +11,49 @@ final class TaskViewController: UIViewController {
     
     // MARK: - Properties
     
-    var id: UUID = UUID()
+    lazy var task = ToDoItem(text: "")
     
-    private lazy var contentView = TaskView()
+    lazy private var contentView: TaskView = {
+        let view = TaskView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        
+        return view
+    }()
     
     // MARK: - Life Cycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         setupViews()
+        setConstraints()
         
         contentView.delegate = self
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        do {
-            try FileCache.shared.loadJSONItems(from: "Data.json")
-        } catch {
-            print(error)
-            return
-        }
-        
-        guard let task = FileCache.shared.list.first else {
-            print("No tasks in Data.json")
-            return
-        }
-        
-        id = task.id
-        
-        contentView.configure(with: task)
-    }
-    
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        
-        contentView.frame = view.bounds
     }
     
     // MARK: - Selectors
     
     @objc private func handleCancel() {
+        dismiss(animated: true)
     }
     
     @objc private func handleDone() {
-        let task = contentView.getTask()
+        let item = contentView.getTask()
         
-        FileCache.shared.addNewItem(ToDoItem(id: self.id,
-                                             text: task.text,
-                                             importance: task.importance,
-                                             deadline: task.deadline,
-                                             isCompleted: false,
-                                             createdAt: Date()))
+        FileCache.shared.add(ToDoItem(id: self.task.id,
+                                             text: item.text,
+                                             importance: item.importance,
+                                             deadline: item.deadline,
+                                             isCompleted: self.task.isCompleted,
+                                             createdAt: self.task.createdAt,
+                                             changedAt: Date()))
         
-        print(FileCache.shared.list)
         do {
             try FileCache.shared.saveJSONItems(to: "Data.json")
         } catch {
-            print(error)
+            NSLog(error.localizedDescription)
         }
+        
+        dismiss(animated: true)
     }
     
     // MARK: - Methods
@@ -83,16 +66,37 @@ final class TaskViewController: UIViewController {
         
         view.addSubview(contentView)
     }
+    
+    private func setConstraints() {
+        NSLayoutConstraint.activate([
+            contentView.topAnchor.constraint(equalTo: view.topAnchor),
+            contentView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            contentView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            contentView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+        ])
+    }
+    
+    
+    public func configure(with task: ToDoItem) {
+        self.task = task
+        self.contentView.configure(with: task)
+    }
+    
+    public func configureForAddition() {
+        self.contentView.defaultConfigure()
+    }
 }
+
+// MARK: - Extensions
 
 extension TaskViewController: TaskViewDelegate {
     func didTapDeleteButton() {
-        FileCache.shared.removeItem(with: id)
-        print(FileCache.shared.list)
+        FileCache.shared.removeItem(with: task.id)
+        self.dismiss(animated: true)
         do {
             try FileCache.shared.saveJSONItems(to: "Data.json")
         } catch {
-            print(error)
+            NSLog(error.localizedDescription)
         }
     }
 }

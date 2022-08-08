@@ -19,7 +19,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         window = UIWindow(windowScene: windowScene)
         window?.makeKeyAndVisible()
-        let mainVC = UINavigationController(rootViewController: TaskViewController())
+        let mainVC = UINavigationController(rootViewController: ListViewController())
+        mainVC.modalPresentationStyle = .fullScreen
         window?.rootViewController = mainVC
     }
 

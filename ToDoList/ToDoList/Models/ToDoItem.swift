@@ -82,15 +82,15 @@ extension ToDoItem {
         
         let deadline: Date?
         if let dead = dict["deadline"] as? String,
-        let dead = Double(dead) {
+           let dead = Double(dead) {
             deadline = Date(timeIntervalSince1970: dead)
         } else {
             deadline = nil
         }
-
+        
         let changedAt: Date?
         if let change = dict["changed_at"] as? String,
-        let change = Double(change) {
+           let change = Double(change) {
             changedAt = Date(timeIntervalSince1970: change)
         } else {
             changedAt = nil
@@ -103,5 +103,17 @@ extension ToDoItem {
                         isCompleted: isCompleted,
                         createdAt: Date(timeIntervalSince1970: createdAt),
                         changedAt: changedAt)
+    }
+}
+
+extension ToDoItem {
+    public func asCompleted() -> ToDoItem {
+        ToDoItem(id: self.id,
+                 text: self.text,
+                 importance: self.importance,
+                 deadline: self.deadline,
+                 isCompleted: !self.isCompleted,
+                 createdAt: self.createdAt,
+                 changedAt: self.changedAt)
     }
 }
