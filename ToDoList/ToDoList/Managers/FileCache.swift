@@ -20,7 +20,7 @@ final class FileCache {
     
     private init() {}
     
-    public func addNewItem(_ toDoItem: ToDoItem) {
+    public func add(_ toDoItem: ToDoItem) {
         
         if let index = self.list.firstIndex(where: { $0.id == toDoItem.id }) {
             self.list[index] = toDoItem

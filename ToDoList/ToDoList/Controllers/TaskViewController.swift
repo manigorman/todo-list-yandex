@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class TaskVC: UIViewController {
+final class TaskViewController: UIViewController {
     
     // MARK: - Properties
     
@@ -39,7 +39,7 @@ final class TaskVC: UIViewController {
     @objc private func handleDone() {
         let item = contentView.getTask()
         
-        FileCache.shared.addNewItem(ToDoItem(id: self.task.id,
+        FileCache.shared.add(ToDoItem(id: self.task.id,
                                              text: item.text,
                                              importance: item.importance,
                                              deadline: item.deadline,
@@ -50,7 +50,7 @@ final class TaskVC: UIViewController {
         do {
             try FileCache.shared.saveJSONItems(to: "Data.json")
         } catch {
-            print(error)
+            NSLog(error.localizedDescription)
         }
         
         dismiss(animated: true)
@@ -82,21 +82,21 @@ final class TaskVC: UIViewController {
         self.contentView.configure(with: task)
     }
     
-    public func defaultConfigure() {
+    public func configureForAddition() {
         self.contentView.defaultConfigure()
     }
 }
 
 // MARK: - Extensions
 
-extension TaskVC: TaskViewDelegate {
+extension TaskViewController: TaskViewDelegate {
     func didTapDeleteButton() {
         FileCache.shared.removeItem(with: task.id)
         self.dismiss(animated: true)
         do {
             try FileCache.shared.saveJSONItems(to: "Data.json")
         } catch {
-            print(error)
+            NSLog(error.localizedDescription)
         }
     }
 }

@@ -11,6 +11,8 @@ final class NewTaskCell: UITableViewCell {
     
     // MARK: - Properties
     
+    static let id = "newTaskCellId"
+    
     private lazy var label: UILabel = {
         let label = UILabel()
         label.text = "Новое"

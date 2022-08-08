@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class ListVC: UIViewController {
+final class ListViewController: UIViewController {
     
     // MARK: - Properties
     
@@ -19,8 +19,8 @@ final class ListVC: UIViewController {
         let table = UITableView(frame: .zero, style: .insetGrouped)
         table.backgroundColor = .appColor(.primaryBack)
         
-        table.register(TaskCell.self, forCellReuseIdentifier: "taskCellId")
-        table.register(NewTaskCell.self, forCellReuseIdentifier: "newTaskCellId")
+        table.register(TaskCell.self, forCellReuseIdentifier: TaskCell.id)
+        table.register(NewTaskCell.self, forCellReuseIdentifier: NewTaskCell.id)
         table.separatorInset = UIEdgeInsets(top: 0, left: 52, bottom: 0, right: 0)
         table.translatesAutoresizingMaskIntoConstraints = false
         
@@ -48,7 +48,7 @@ final class ListVC: UIViewController {
         do {
             try FileCache.shared.loadJSONItems(from: "Data.json")
         } catch {
-            print(error)
+            NSLog(error.localizedDescription)
             return
         }
         
@@ -58,7 +58,16 @@ final class ListVC: UIViewController {
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         
-        try! FileCache.shared.saveJSONItems(to: "Data.json")
+        do {
+            try FileCache.shared.saveJSONItems(to: "Data.json")
+        } catch {
+            NSLog(error.localizedDescription)
+            return
+        }
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
     
     // MARK: - Selectors
@@ -93,15 +102,8 @@ final class ListVC: UIViewController {
     }
     
     private func handleMarkAsCompleted(at indexPath: IndexPath) {
-        let item = self.list[indexPath.row]
-        let newItem = ToDoItem(id: item.id,
-                               text: item.text,
-                               importance: item.importance,
-                               deadline: item.deadline,
-                               isCompleted: !item.isCompleted,
-                               createdAt: item.createdAt,
-                               changedAt: item.changedAt)
-        FileCache.shared.addNewItem(newItem)
+        let item = self.list[indexPath.row].asCompleted()
+        FileCache.shared.add(item)
     }
     
     private func handleMoveToTrash(at indexPath: IndexPath) {
@@ -111,12 +113,12 @@ final class ListVC: UIViewController {
         do {
             try FileCache.shared.saveJSONItems(to: "Data.json")
         } catch {
-            print(error)
+            NSLog(error.localizedDescription)
         }
     }
     
     private func handleEdit(at indexPath: IndexPath) {
-        let taskVC = TaskVC()
+        let taskVC = TaskViewController()
         taskVC.configure(with: self.list[indexPath.row])
         let navigationVC = UINavigationController(rootViewController: taskVC)
         navigationVC.modalPresentationStyle = .pageSheet
@@ -127,20 +129,24 @@ final class ListVC: UIViewController {
 
 // MARK: - Extensions
 
-extension ListVC: UITableViewDelegate, UITableViewDataSource {
+extension ListViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         self.list.count + 1
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if indexPath.row < self.list.count {
-            let cell = tableView.dequeueReusableCell(withIdentifier: "taskCellId", for: indexPath) as! TaskCell
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: TaskCell.id, for: indexPath) as? TaskCell else {
+                return UITableViewCell()
+            }
             cell.accessoryType = .disclosureIndicator
             cell.configure(with: self.list[indexPath.row])
             
             return cell
         } else {
-            let cell = tableView.dequeueReusableCell(withIdentifier: "newTaskCellId", for: indexPath) as! NewTaskCell
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: NewTaskCell.id, for: indexPath) as? NewTaskCell else {
+                return UITableViewCell()
+            }
             cell.accessoryType = .none
             
             return cell
@@ -162,11 +168,11 @@ extension ListVC: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        let taskVC = TaskVC()
+        let taskVC = TaskViewController()
         if indexPath.row < self.list.count {
             taskVC.configure(with: list[indexPath.row])
         } else {
-            taskVC.defaultConfigure()
+            taskVC.configureForAddition()
         }
         
         let navigationVC = UINavigationController(rootViewController: taskVC)
@@ -216,7 +222,7 @@ extension ListVC: UITableViewDelegate, UITableViewDataSource {
     }
 }
 
-extension ListVC: HeaderViewDelegate {
+extension ListViewController: HeaderViewDelegate {
     func didTapShowCompleted() {
         self.isShowingCompleted = !self.isShowingCompleted
         self.list = self.isShowingCompleted ? FileCache.shared.list : FileCache.shared.list.filter { $0.isCompleted == false }

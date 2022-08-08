@@ -11,6 +11,8 @@ final class TaskCell: UITableViewCell {
     
     // MARK: - Properties
     
+    static let id = "taskCellId"
+    
     private lazy var labelStack: UIStackView = {
         let stack = UIStackView()
         stack.axis = .vertical
