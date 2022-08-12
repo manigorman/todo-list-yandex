@@ -33,7 +33,10 @@ final class TaskView: UIView {
         let textView = UITextView()
         textView.backgroundColor = .appColor(.secondaryBack)
         textView.font = .systemFont(ofSize: 17)
-        textView.textContainerInset = UIEdgeInsets(top: LayoutConstants.topInset, left: LayoutConstants.leadingInset, bottom: LayoutConstants.topInset, right: LayoutConstants.leadingInset)
+        textView.textContainerInset = UIEdgeInsets(top: LayoutConstants.topInset,
+                                                   left: LayoutConstants.leadingInset,
+                                                   bottom: LayoutConstants.topInset,
+                                                   right: LayoutConstants.leadingInset)
         textView.layer.cornerRadius = 16
         textView.isScrollEnabled = false
         textView.autocapitalizationType = .sentences
@@ -145,7 +148,6 @@ final class TaskView: UIView {
     
     private lazy var deadlineSwitch: UISwitch = {
         let toggle = UISwitch()
-        
         
         toggle.translatesAutoresizingMaskIntoConstraints = false
         
@@ -282,7 +284,7 @@ final class TaskView: UIView {
         let tap = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         addGestureRecognizer(tap)
         
-        let contentInsets = UIEdgeInsets(top: 0, left: 0, bottom: keyboardSize.height , right: 0)
+        let contentInsets = UIEdgeInsets(top: 0, left: 0, bottom: keyboardSize.height, right: 0)
         contentScrollView.contentInset = contentInsets
         contentScrollView.scrollIndicatorInsets = contentInsets
     }
@@ -415,7 +417,7 @@ final class TaskView: UIView {
     }
     
     public func setConstraints() {
-        if (!sharedConstraints[0].isActive) {
+        if !sharedConstraints[0].isActive {
             NSLayoutConstraint.activate(sharedConstraints)
         }
         if traitCollection.horizontalSizeClass == .compact && traitCollection.verticalSizeClass == .regular {
@@ -450,7 +452,6 @@ final class TaskView: UIView {
             self.dateButton.alpha = 0
             
             self.deadlineSwitch.isOn = false
-            
             
             self.divider2.isHidden = true
             self.divider2.alpha = 0

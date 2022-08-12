@@ -45,7 +45,8 @@ final class TaskCell: UITableViewCell {
     
     private lazy var radioImage: UIImageView = {
         let imageView = UIImageView(image: UIImage(systemName: "circle",
-                                                   withConfiguration: UIImage.SymbolConfiguration(weight: .semibold))?.withTintColor(.appColor(.green) ?? UIColor.green, renderingMode: .alwaysOriginal))
+                                                   withConfiguration: UIImage.SymbolConfiguration(weight: .semibold))?
+            .withTintColor(.appColor(.green) ?? UIColor.green, renderingMode: .alwaysOriginal))
         imageView.contentMode = .scaleToFill
         
         imageView.translatesAutoresizingMaskIntoConstraints = false

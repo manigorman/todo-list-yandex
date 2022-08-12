@@ -55,7 +55,7 @@ final class NewTaskCell: UITableViewCell {
             label.topAnchor.constraint(equalTo: contentView.topAnchor, constant: LayoutConstants.topInset),
             label.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: LayoutConstants.newCellLeadingInset),
             label.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: LayoutConstants.trailingInset),
-            label.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: LayoutConstants.bottomInset),
+            label.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: LayoutConstants.bottomInset)
         ])
     }
 }

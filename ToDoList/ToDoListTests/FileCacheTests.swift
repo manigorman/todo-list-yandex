@@ -10,13 +10,13 @@ import XCTest
 
 class FileCacheTests: XCTestCase {
 
-    override func setUpWithError() throws {
+//    override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.
-    }
+//    }
 
-    override func tearDownWithError() throws {
+//    override func tearDownWithError() throws {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
-    }
+//    }
     
     func testToDoItem_canLoadJson() {
         
@@ -24,17 +24,17 @@ class FileCacheTests: XCTestCase {
         let fileURL = FileManager.cachesDirectoryURL.appendingPathComponent(fileName)
         
         if FileManager.default.fileExists(atPath: fileURL.path) {
-            try! FileManager.default.removeItem(atPath: fileURL.path)
+            try? FileManager.default.removeItem(atPath: fileURL.path)
         }
         
         XCTAssertThrowsError(try FileCache.shared.loadJSONItems(from: fileName))
         
         var str = ""
-        try! str.write(to: fileURL, atomically: true, encoding: .utf8)
+        try? str.write(to: fileURL, atomically: true, encoding: .utf8)
         XCTAssertThrowsError(try FileCache.shared.loadJSONItems(from: fileName))
         
         str = "[]"
-        try! str.write(to: fileURL, atomically: true, encoding: .utf8)
+        try? str.write(to: fileURL, atomically: true, encoding: .utf8)
         XCTAssertThrowsError(try FileCache.shared.loadJSONItems(from: fileName))
         
         str = """
@@ -42,7 +42,7 @@ class FileCacheTests: XCTestCase {
         "list": []
         }
         """
-        try! str.write(to: fileURL, atomically: true, encoding: .utf8)
+        try? str.write(to: fileURL, atomically: true, encoding: .utf8)
         XCTAssertNoThrow(try FileCache.shared.loadJSONItems(from: fileName))
         
         str = """
@@ -66,7 +66,7 @@ class FileCacheTests: XCTestCase {
         ]
         }
         """
-        try! str.write(to: fileURL, atomically: true, encoding: .utf8)
+        try? str.write(to: fileURL, atomically: true, encoding: .utf8)
         XCTAssertNoThrow(try FileCache.shared.loadJSONItems(from: fileName))
     }
     
@@ -97,9 +97,9 @@ class FileCacheTests: XCTestCase {
         ]
         }
         """
-        try! str.write(to: fileURL, atomically: true, encoding: .utf8)
+        try? str.write(to: fileURL, atomically: true, encoding: .utf8)
         
-        try! FileCache.shared.loadJSONItems(from: fileName)
+        try? FileCache.shared.loadJSONItems(from: fileName)
         XCTAssertNil(FileCache.shared.removeItem(with: UUID(uuidString: "7A2A7CC7-8941-4489-9AF4-A1289442651A")!))
         XCTAssertNotNil(FileCache.shared.removeItem(with: UUID(uuidString: "7A2A7CC7-8941-4489-9AF4-A1289442651E")!))
     }

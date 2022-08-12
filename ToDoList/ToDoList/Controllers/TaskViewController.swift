@@ -15,6 +15,7 @@ final class TaskViewController: UIViewController {
     
     lazy private var contentView: TaskView = {
         let view = TaskView()
+        
         view.translatesAutoresizingMaskIntoConstraints = false
         
         return view
@@ -75,7 +76,6 @@ final class TaskViewController: UIViewController {
             contentView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
         ])
     }
-    
     
     public func configure(with task: ToDoItem) {
         self.task = task

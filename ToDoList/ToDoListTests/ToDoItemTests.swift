@@ -10,13 +10,13 @@ import XCTest
 
 class ToDoItemTests: XCTestCase {
     
-    override func setUpWithError() throws {
+//    override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.
-    }
+//    }
     
-    override func tearDownWithError() throws {
+//    override func tearDownWithError() throws {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
-    }
+//    }
     
     func testToDoItem_canCreateInstance() {
         
@@ -40,7 +40,7 @@ class ToDoItemTests: XCTestCase {
         
         let id = UUID()
         let text = "Hello world"
-        let importance = ToDoItem.Importance.basic
+        let importance = Importance.basic
         let isCompleted = true
         let date = Date()
         
