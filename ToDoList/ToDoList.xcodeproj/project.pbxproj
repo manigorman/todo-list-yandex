@@ -25,6 +25,9 @@
 		C5DA7487289AD26200A06FCB /* DateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5DA7486289AD26200A06FCB /* DateFormatter.swift */; };
 		C5DA7489289AD56E00A06FCB /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5DA7488289AD56E00A06FCB /* Constants.swift */; };
 		C5DB39412896F8CD00D086A9 /* TaskView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5DB39402896F8CD00D086A9 /* TaskView.swift */; };
+		C5DDCBE228A97F4700B7D686 /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5DDCBE128A97F4700B7D686 /* NetworkService.swift */; };
+		C5DDCBE428A9808C00B7D686 /* FileCacheService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5DDCBE328A9808C00B7D686 /* FileCacheService.swift */; };
+		C5DDCBE628A9809D00B7D686 /* MockFileCacheService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5DDCBE528A9809D00B7D686 /* MockFileCacheService.swift */; };
 		C5E7C3EF289BD11200C540FA /* TaskView+TextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5E7C3EE289BD11200C540FA /* TaskView+TextView.swift */; };
 /* End PBXBuildFile section */
 
@@ -60,6 +63,9 @@
 		C5DA7486289AD26200A06FCB /* DateFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFormatter.swift; sourceTree = "<group>"; };
 		C5DA7488289AD56E00A06FCB /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		C5DB39402896F8CD00D086A9 /* TaskView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskView.swift; sourceTree = "<group>"; };
+		C5DDCBE128A97F4700B7D686 /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
+		C5DDCBE328A9808C00B7D686 /* FileCacheService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileCacheService.swift; sourceTree = "<group>"; };
+		C5DDCBE528A9809D00B7D686 /* MockFileCacheService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockFileCacheService.swift; sourceTree = "<group>"; };
 		C5E7C3EE289BD11200C540FA /* TaskView+TextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TaskView+TextView.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -137,6 +143,9 @@
 			isa = PBXGroup;
 			children = (
 				C52F40762895C32E00B48390 /* FileCache.swift */,
+				C5DDCBE128A97F4700B7D686 /* NetworkService.swift */,
+				C5DDCBE328A9808C00B7D686 /* FileCacheService.swift */,
+				C5DDCBE528A9809D00B7D686 /* MockFileCacheService.swift */,
 			);
 			path = Managers;
 			sourceTree = "<group>";
@@ -281,6 +290,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C5DDCBE628A9809D00B7D686 /* MockFileCacheService.swift in Sources */,
 				C53165E7289C5A3F0007913A /* ListViewController.swift in Sources */,
 				C5DA7487289AD26200A06FCB /* DateFormatter.swift in Sources */,
 				C52F40632895C14300B48390 /* TaskViewController.swift in Sources */,
@@ -291,8 +301,10 @@
 				C5E7C3EF289BD11200C540FA /* TaskView+TextView.swift in Sources */,
 				C5994885289EB6AD00806FB0 /* NewTaskCell.swift in Sources */,
 				C52F40742895C30E00B48390 /* ToDoItem.swift in Sources */,
+				C5DDCBE228A97F4700B7D686 /* NetworkService.swift in Sources */,
 				C587D7D9289AD7B800131168 /* UIColor.swift in Sources */,
 				C52F407A2895C34A00B48390 /* FileManager.swift in Sources */,
+				C5DDCBE428A9808C00B7D686 /* FileCacheService.swift in Sources */,
 				C52F40772895C32E00B48390 /* FileCache.swift in Sources */,
 				C52F40612895C14300B48390 /* SceneDelegate.swift in Sources */,
 				C53165F3289D50F50007913A /* HeaderView.swift in Sources */,

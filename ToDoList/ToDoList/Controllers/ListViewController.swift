@@ -45,11 +45,25 @@ final class ListViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        do {
-            try FileCache.shared.loadJSONItems(from: "Data.json")
-        } catch {
-            NSLog(error.localizedDescription)
-            return
+//        do {
+//            try FileCache.shared.loadJSONItems(from: "Data.json")
+//        } catch {
+//            NSLog(error.localizedDescription)
+//            return
+//        }
+        
+        MockFileCacheService().load(from: "Data.json") { result in
+            switch result {
+            case .success(let items):
+                self.list = items
+                DispatchQueue.main.async {
+                    self.tableView.reloadData()
+                }
+                return
+            case .failure(let error):
+                print(error.localizedDescription)
+                return
+            }
         }
         
         self.list = FileCache.shared.list.filter { $0.isCompleted == false }
@@ -59,10 +73,15 @@ final class ListViewController: UIViewController {
         super.viewDidDisappear(animated)
         
         do {
-            try FileCache.shared.saveJSONItems(to: "Data.json")
-        } catch {
-            NSLog(error.localizedDescription)
-            return
+//            try FileCache.shared.saveJSONItems(to: "Data.json")
+            MockFileCacheService().save(to: "Data.json") { result in
+                switch result {
+                case .success():
+                    print("success")
+                case .failure(let error):
+                    print(error)
+                }
+            }
         }
     }
     
@@ -111,9 +130,15 @@ final class ListViewController: UIViewController {
 //        self.tableView.deleteRows(at: [indexPath], with: .fade)
         FileCache.shared.removeItem(with: self.list[indexPath.row].id)
         do {
-            try FileCache.shared.saveJSONItems(to: "Data.json")
-        } catch {
-            NSLog(error.localizedDescription)
+//            try FileCache.shared.saveJSONItems(to: "Data.json")
+            MockFileCacheService().save(to: "Data.json") { result in
+                switch result {
+                case .success():
+                    print("success")
+                case .failure(let error):
+                    print(error)
+                }
+            }
         }
     }
     
