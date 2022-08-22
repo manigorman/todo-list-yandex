@@ -11,7 +11,13 @@ final class ListViewController: UIViewController {
     
     // MARK: - Properties
     
-    private lazy var list: [ToDoItem] = []
+    private lazy var list: [ToDoItem] = [] {
+        didSet {
+            updateTable()
+        }
+    }
+    
+    private let cacheService = MockFileCacheService()
     
     private var isShowingCompleted = false
     
@@ -48,11 +54,15 @@ final class ListViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        do {
-            try FileCache.shared.loadJSONItems(from: "Data.json")
-        } catch {
-            NSLog(error.localizedDescription)
-            return
+        cacheService.load(from: "Data.json") { result in
+            switch result {
+            case .success(let items):
+                self.list = items
+                return
+            case .failure(let error):
+                print(error.localizedDescription)
+                return
+            }
         }
         
         self.list = FileCache.shared.list.filter { $0.isCompleted == false }
@@ -62,10 +72,14 @@ final class ListViewController: UIViewController {
         super.viewDidDisappear(animated)
         
         do {
-            try FileCache.shared.saveJSONItems(to: "Data.json")
-        } catch {
-            NSLog(error.localizedDescription)
-            return
+            MockFileCacheService().save(to: "Data.json") { result in
+                switch result {
+                case .success:
+                    print("success")
+                case .failure(let error):
+                    print(error)
+                }
+            }
         }
     }
     
@@ -108,14 +122,25 @@ final class ListViewController: UIViewController {
         FileCache.shared.add(item)
     }
     
+    private func updateTable() {
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+        }
+    }
+    
     private func handleMoveToTrash(at indexPath: IndexPath) {
 //        let deletedElement = self.list.remove(at: indexPath.row)
 //        self.tableView.deleteRows(at: [indexPath], with: .fade)
         FileCache.shared.removeItem(with: self.list[indexPath.row].id)
         do {
-            try FileCache.shared.saveJSONItems(to: "Data.json")
-        } catch {
-            NSLog(error.localizedDescription)
+            MockFileCacheService().save(to: "Data.json") { result in
+                switch result {
+                case .success:
+                    print("success")
+                case .failure(let error):
+                    print(error)
+                }
+            }
         }
     }
     
