@@ -16,8 +16,7 @@ class MockFileCacheService: FileCacheService {
         self.syncQueue.asyncAfter(deadline: .now() + 2) {
             do {
                 try FileCache.shared.saveJSONItems(to: file)
-            }
-            catch {
+            } catch {
                 completion(.failure(error))
             }
             completion(.success(()))
@@ -40,8 +39,7 @@ class MockFileCacheService: FileCacheService {
             do {
                 let list = try FileCache.shared.loadJSONItems(from: file)
                 completion(.success(list))
-            }
-            catch {
+            } catch {
                 completion(.failure(error))
             }
         }

@@ -74,7 +74,7 @@ final class ListViewController: UIViewController {
         do {
             MockFileCacheService().save(to: "Data.json") { result in
                 switch result {
-                case .success():
+                case .success:
                     print("success")
                 case .failure(let error):
                     print(error)
@@ -135,7 +135,7 @@ final class ListViewController: UIViewController {
         do {
             MockFileCacheService().save(to: "Data.json") { result in
                 switch result {
-                case .success():
+                case .success:
                     print("success")
                 case .failure(let error):
                     print(error)
