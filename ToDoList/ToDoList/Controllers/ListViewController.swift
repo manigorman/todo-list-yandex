@@ -38,7 +38,10 @@ final class ListViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        NotificationCenter.default.addObserver(self, selector: #selector(modelUpdatedNotification), name: NSNotification.Name(rawValue: NotificationKeys.fileCacheNotificationKey), object: nil)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(modelUpdatedNotification),
+                                               name: NSNotification.Name(rawValue: NotificationKeys.fileCacheNotificationKey),
+                                               object: nil)
         
         navigationController?.navigationBar.prefersLargeTitles = true
         title = "Мои дела"
@@ -90,10 +93,9 @@ final class ListViewController: UIViewController {
         print("Updating table")
         
         self.list = self.isShowingCompleted ? FileCache.shared.list : FileCache.shared.list.filter { $0.isCompleted == false }
-        self.list = self.list.sorted{ $0.createdAt < $1.createdAt }
+        self.list = self.list.sorted { $0.createdAt < $1.createdAt }
         self.tableView.reloadData()
     }
-    
     
     // MARK: - Methods
     
@@ -181,7 +183,9 @@ extension ListViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         
         let headerView = HeaderView()
-        headerView.configure(title: self.isShowingCompleted ? "Скрыть" : "Показать", number: FileCache.shared.list.filter{ $0.isCompleted == true }.count)
+        headerView.configure(title:
+                                self.isShowingCompleted ? "Скрыть" : "Показать",
+                             number: FileCache.shared.list.filter { $0.isCompleted == true }.count)
         headerView.delegate = self
         
         return headerView
@@ -210,7 +214,8 @@ extension ListViewController: UITableViewDelegate, UITableViewDataSource {
         
         if indexPath.row < self.list.count {
             
-            let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { [weak self] action, view, completionHandler in
+            let deleteAction = UIContextualAction(style: .destructive,
+                                                  title: "Delete") { [weak self] _, _, completionHandler in
                 self?.handleMoveToTrash(at: indexPath)
                 
                 completionHandler(true)
@@ -218,7 +223,8 @@ extension ListViewController: UITableViewDelegate, UITableViewDataSource {
             deleteAction.backgroundColor = .appColor(.red)
             deleteAction.image = SFSymbols.trashImage
             
-            let infoAction = UIContextualAction(style: .normal, title: "Edit") { [weak self] action, view, completionHandler in
+            let infoAction = UIContextualAction(style: .normal,
+                                                title: "Edit") { [weak self] _, _, completionHandler in
                 self?.handleEdit(at: indexPath)
                 completionHandler(true)
             }
@@ -233,7 +239,8 @@ extension ListViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         if indexPath.row < self.list.count {
-            let doneAction = UIContextualAction(style: .normal, title: "Done") { [weak self] action, view, completionHandler in
+            let doneAction = UIContextualAction(style: .normal,
+                                                title: "Done") { [weak self] _, _, completionHandler in
                 self?.handleMarkAsCompleted(at: indexPath)
                 completionHandler(true)
             }

@@ -9,26 +9,36 @@ import Foundation
 import UIKit
 
 enum SFSymbols {
-    static let trashImage: UIImage = UIImage(systemName: "trash.fill", withConfiguration: UIImage.SymbolConfiguration(weight: .semibold))!.withTintColor(.appColor(.white) ?? .white, renderingMode: .alwaysOriginal)
+    static let trashImage: UIImage = UIImage(systemName: "trash.fill",
+                                             withConfiguration: UIImage.SymbolConfiguration(weight: .semibold))!
+        .withTintColor(.appColor(.white) ?? .white, renderingMode: .alwaysOriginal)
     
-    static let infoImage: UIImage = UIImage(systemName: "info.circle.fill", withConfiguration: UIImage.SymbolConfiguration(weight: .semibold))!.withTintColor(.appColor(.white) ?? .white, renderingMode: .alwaysOriginal)
+    static let infoImage: UIImage = UIImage(systemName: "info.circle.fill",
+                                            withConfiguration: UIImage.SymbolConfiguration(weight: .semibold))!
+        .withTintColor(.appColor(.white) ?? .white, renderingMode: .alwaysOriginal)
     
     static let checkmarkImage: UIImage = UIImage(systemName: "checkmark.circle.fill",
-                                                 withConfiguration: UIImage.SymbolConfiguration(weight: .semibold))!.withTintColor(.appColor(.green) ?? .systemGreen, renderingMode: .alwaysOriginal)
+                                                 withConfiguration: UIImage.SymbolConfiguration(weight: .semibold))!
+        .withTintColor(.appColor(.green) ?? .systemGreen, renderingMode: .alwaysOriginal)
     
-    static let circleImage: UIImage = UIImage(systemName: "circle", withConfiguration: UIImage.SymbolConfiguration(weight: .regular))!.withTintColor(.appColor(.separator) ?? .lightGray, renderingMode: .alwaysOriginal)
+    static let circleImage: UIImage = UIImage(systemName: "circle", withConfiguration: UIImage.SymbolConfiguration(weight: .regular))!
+        .withTintColor(.appColor(.separator) ?? .lightGray, renderingMode: .alwaysOriginal)
     
     static let lowImage: UIImage = UIImage(systemName: "arrow.down",
-                                           withConfiguration: UIImage.SymbolConfiguration(weight: .bold))!.withTintColor(.appColor(.lightGray) ?? .lightGray, renderingMode: .alwaysOriginal)
+                                           withConfiguration: UIImage.SymbolConfiguration(weight: .bold))!
+        .withTintColor(.appColor(.lightGray) ?? .lightGray, renderingMode: .alwaysOriginal)
     
     static let importantImage: UIImage = UIImage(systemName: "exclamationmark.2",
-                                                 withConfiguration: UIImage.SymbolConfiguration(weight: .bold))!.withTintColor(.appColor(.red) ?? .red, renderingMode: .alwaysOriginal)
+                                                 withConfiguration: UIImage.SymbolConfiguration(weight: .bold))!
+        .withTintColor(.appColor(.red) ?? .red, renderingMode: .alwaysOriginal)
     
     static let calendarImage: UIImage = UIImage(systemName: "calendar",
-                                                withConfiguration: UIImage.SymbolConfiguration(weight: .light))!.withTintColor(.appColor(.tertiary) ?? .lightGray, renderingMode: .alwaysOriginal)
+                                                withConfiguration: UIImage.SymbolConfiguration(weight: .light))!
+        .withTintColor(.appColor(.tertiary) ?? .lightGray, renderingMode: .alwaysOriginal)
     
     static let circleFilledImage: UIImage = UIImage(systemName: "circle.inset.filled",
-                                                    withConfiguration: UIImage.SymbolConfiguration(paletteColors: [UIColor(named: "lightRed") ?? .systemRed, .appColor(.red) ?? .red]))!
+                                                    withConfiguration: UIImage.SymbolConfiguration(
+                                                        paletteColors: [UIColor(named: "lightRed") ?? .systemRed, .appColor(.red) ?? .red]))!
 }
 
 enum NotificationKeys {

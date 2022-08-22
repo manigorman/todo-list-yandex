@@ -1,0 +1,26 @@
+PODS:
+  - CocoaLumberjack (3.7.4):
+    - CocoaLumberjack/Core (= 3.7.4)
+  - CocoaLumberjack/Core (3.7.4)
+  - SnapKit (5.6.0)
+  - SwiftLint (0.48.0)
+
+DEPENDENCIES:
+  - CocoaLumberjack
+  - SnapKit (~> 5.6.0)
+  - SwiftLint (= 0.48.0)
+
+SPEC REPOS:
+  trunk:
+    - CocoaLumberjack
+    - SnapKit
+    - SwiftLint
+
+SPEC CHECKSUMS:
+  CocoaLumberjack: 543c79c114dadc3b1aba95641d8738b06b05b646
+  SnapKit: e01d52ebb8ddbc333eefe2132acf85c8227d9c25
+  SwiftLint: 284cea64b6187c5d6bd83e9a548a64104d546447
+
+PODFILE CHECKSUM: ba5777af59e641f0d7a3e41e65c7729c6d0bbc0f
+
+COCOAPODS: 1.10.1

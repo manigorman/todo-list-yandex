@@ -78,7 +78,7 @@ extension ToDoItem {
             return nil
         }
         
-        let importance = (dict["importance"] as? String).flatMap{ Importance(rawValue: $0) } ?? .basic
+        let importance = (dict["importance"] as? String).flatMap { Importance(rawValue: $0) } ?? .basic
         
         let deadline: Date?
         if let dead = dict["deadline"] as? String,
