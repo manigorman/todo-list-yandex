@@ -70,6 +70,6 @@ final class FileCache {
             throw FileCacheErrors.noDataInFile(url: url)
         }
         
-        self.list = list.compactMap{ ToDoItem.parse(json: $0) }.sorted{ $0.createdAt < $1.createdAt }
+        self.list = list.compactMap { ToDoItem.parse(json: $0) }.sorted { $0.createdAt < $1.createdAt }
     }
 }

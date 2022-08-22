@@ -33,7 +33,10 @@ final class TaskView: UIView {
         let textView = UITextView()
         textView.backgroundColor = .appColor(.secondaryBack)
         textView.font = .systemFont(ofSize: 17)
-        textView.textContainerInset = UIEdgeInsets(top: LayoutConstants.topInset, left: LayoutConstants.leadingInset, bottom: LayoutConstants.topInset, right: LayoutConstants.leadingInset)
+        textView.textContainerInset = UIEdgeInsets(top: LayoutConstants.topInset,
+                                                   left: LayoutConstants.leadingInset,
+                                                   bottom: LayoutConstants.topInset,
+                                                   right: LayoutConstants.leadingInset)
         textView.layer.cornerRadius = 16
         textView.isScrollEnabled = false
         textView.autocapitalizationType = .sentences
@@ -145,7 +148,6 @@ final class TaskView: UIView {
     
     private lazy var deadlineSwitch: UISwitch = {
         let toggle = UISwitch()
-        
         
         toggle.translatesAutoresizingMaskIntoConstraints = false
         
@@ -282,7 +284,7 @@ final class TaskView: UIView {
         let tap = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         addGestureRecognizer(tap)
         
-        let contentInsets = UIEdgeInsets(top: 0, left: 0, bottom: keyboardSize.height , right: 0)
+        let contentInsets = UIEdgeInsets(top: 0, left: 0, bottom: keyboardSize.height, right: 0)
         contentScrollView.contentInset = contentInsets
         contentScrollView.scrollIndicatorInsets = contentInsets
     }
@@ -305,42 +307,32 @@ final class TaskView: UIView {
     
     private func setupView() {
         backgroundColor = .appColor(.primaryBack)
-        
         addSubview(contentScrollView)
-        
         contentScrollView.addSubview(contentView)
-        
         contentView.addSubview(textView)
         contentView.addSubview(listStackView)
         contentView.addSubview(deleteButton)
-        
         listStackView.addArrangedSubview(importanceContainerView)
         listStackView.addArrangedSubview(divider)
         listStackView.addArrangedSubview(deadlineContainerView)
         listStackView.addArrangedSubview(divider2)
         listStackView.addArrangedSubview(pickerContainerView)
-        
         importanceContainerView.addSubview(importanceLabel)
         importanceContainerView.addSubview(importanceSegmentedControl)
-        
         deadlineContainerView.addSubview(deadlineStackView)
         deadlineContainerView.addSubview(deadlineSwitch)
-        
         deadlineStackView.addArrangedSubview(deadlineLabel)
         deadlineStackView.addArrangedSubview(dateButton)
         pickerContainerView.addSubview(datePicker)
-        
         sharedConstraints.append(contentsOf: [
             contentScrollView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
             contentScrollView.bottomAnchor.constraint(equalTo: bottomAnchor),
             contentScrollView.leadingAnchor.constraint(equalTo: leadingAnchor),
             contentScrollView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            
             contentView.topAnchor.constraint(equalTo: contentScrollView.topAnchor),
             contentView.bottomAnchor.constraint(equalTo: contentScrollView.bottomAnchor),
             contentView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
             contentView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
-            
             textView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: LayoutConstants.topInset),
             textView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: LayoutConstants.leadingInset),
             textView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: LayoutConstants.trailingInset),
@@ -349,59 +341,47 @@ final class TaskView: UIView {
         
         compactConstraints.append(contentsOf: [
             textView.heightAnchor.constraint(greaterThanOrEqualToConstant: LayoutConstants.textViewMinHeight),
-            
             listStackView.topAnchor.constraint(equalTo: textView.bottomAnchor, constant: LayoutConstants.topInset),
             listStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: LayoutConstants.leadingInset),
             listStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: LayoutConstants.trailingInset),
-            
             importanceContainerView.topAnchor.constraint(equalTo: listStackView.topAnchor),
             importanceContainerView.leadingAnchor.constraint(equalTo: listStackView.leadingAnchor),
             importanceContainerView.trailingAnchor.constraint(equalTo: listStackView.trailingAnchor),
             importanceContainerView.heightAnchor.constraint(equalToConstant: LayoutConstants.containerHeight),
-            
             importanceLabel.centerYAnchor.constraint(equalTo: importanceContainerView.centerYAnchor),
             importanceLabel.leadingAnchor.constraint(equalTo: importanceContainerView.leadingAnchor, constant: LayoutConstants.leadingInset),
             importanceLabel.trailingAnchor.constraint(equalTo: importanceSegmentedControl.leadingAnchor),
             importanceLabel.heightAnchor.constraint(equalToConstant: 22),
-            
             importanceSegmentedControl.centerYAnchor.constraint(equalTo: importanceContainerView.centerYAnchor),
             importanceSegmentedControl.trailingAnchor.constraint(equalTo: importanceContainerView.trailingAnchor, constant: LayoutConstants.controlTrailingInset),
             importanceSegmentedControl.widthAnchor.constraint(equalToConstant: LayoutConstants.segmentedControlWidth),
             importanceSegmentedControl.heightAnchor.constraint(equalToConstant: LayoutConstants.segmentedControlHeight),
-            
             divider.topAnchor.constraint(equalTo: importanceContainerView.bottomAnchor),
             divider.leadingAnchor.constraint(equalTo: listStackView.leadingAnchor),
             divider.trailingAnchor.constraint(equalTo: listStackView.trailingAnchor),
             divider.heightAnchor.constraint(equalToConstant: LayoutConstants.dividerHeight),
-            
             deadlineContainerView.topAnchor.constraint(equalTo: divider.bottomAnchor),
             deadlineContainerView.leadingAnchor.constraint(equalTo: listStackView.leadingAnchor),
             deadlineContainerView.trailingAnchor.constraint(equalTo: listStackView.trailingAnchor),
             deadlineContainerView.heightAnchor.constraint(equalToConstant: LayoutConstants.containerHeight),
-            
             deadlineSwitch.centerYAnchor.constraint(equalTo: deadlineContainerView.centerYAnchor),
             deadlineSwitch.trailingAnchor.constraint(equalTo: listStackView.trailingAnchor, constant: LayoutConstants.controlTrailingInset),
             deadlineSwitch.widthAnchor.constraint(equalToConstant: LayoutConstants.switchWidth),
             deadlineSwitch.heightAnchor.constraint(equalToConstant: LayoutConstants.switchHeight),
-            
             deadlineStackView.centerYAnchor.constraint(equalTo: deadlineContainerView.centerYAnchor),
             deadlineStackView.leadingAnchor.constraint(equalTo: listStackView.leadingAnchor, constant: LayoutConstants.leadingInset),
             deadlineStackView.trailingAnchor.constraint(equalTo: deadlineSwitch.leadingAnchor, constant: LayoutConstants.trailingInset),
-            
             divider2.topAnchor.constraint(equalTo: deadlineContainerView.bottomAnchor),
             divider2.leadingAnchor.constraint(equalTo: listStackView.leadingAnchor),
             divider2.trailingAnchor.constraint(equalTo: listStackView.trailingAnchor),
             divider2.heightAnchor.constraint(equalToConstant: LayoutConstants.dividerHeight),
-            
             pickerContainerView.topAnchor.constraint(equalTo: divider2.bottomAnchor),
             pickerContainerView.leadingAnchor.constraint(equalTo: listStackView.leadingAnchor),
             pickerContainerView.trailingAnchor.constraint(equalTo: listStackView.trailingAnchor),
-            
             datePicker.topAnchor.constraint(equalTo: pickerContainerView.topAnchor),
             datePicker.leadingAnchor.constraint(equalTo: pickerContainerView.leadingAnchor, constant: LayoutConstants.leadingInset),
             datePicker.trailingAnchor.constraint(equalTo: pickerContainerView.trailingAnchor, constant: LayoutConstants.trailingInset),
             datePicker.bottomAnchor.constraint(equalTo: pickerContainerView.bottomAnchor),
-            
             deleteButton.topAnchor.constraint(equalTo: listStackView.bottomAnchor, constant: LayoutConstants.topInset),
             deleteButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: LayoutConstants.leadingInset),
             deleteButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: LayoutConstants.trailingInset),
@@ -415,7 +395,7 @@ final class TaskView: UIView {
     }
     
     public func setConstraints() {
-        if (!sharedConstraints[0].isActive) {
+        if !sharedConstraints[0].isActive {
             NSLayoutConstraint.activate(sharedConstraints)
         }
         if traitCollection.horizontalSizeClass == .compact && traitCollection.verticalSizeClass == .regular {
@@ -450,7 +430,6 @@ final class TaskView: UIView {
             self.dateButton.alpha = 0
             
             self.deadlineSwitch.isOn = false
-            
             
             self.divider2.isHidden = true
             self.divider2.alpha = 0
