@@ -23,4 +23,3 @@ protocol NetworkService {
     completion: @escaping (Result<ToDoItem, Error>) -> Void
   )
 }
-
