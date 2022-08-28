@@ -130,6 +130,7 @@ final class TaskDetailsViewController: UIViewController {
         UIView.animate(withDuration: 0.3) {
             if sender.isOn {
                 self.showDateButton()
+                self.view.layoutIfNeeded()
             } else {
                 self.divider2.isHidden = true
                 self.divider2.alpha = 0
@@ -138,6 +139,7 @@ final class TaskDetailsViewController: UIViewController {
                 self.dateButton.isHidden = true
                 self.dateButton.alpha = 0
 //                self.datePicker.isHidden = true
+                self.view.setNeedsLayout()
             }
         }
     }
@@ -147,8 +149,9 @@ final class TaskDetailsViewController: UIViewController {
             self.pickerContainerView.isHidden = false
             self.pickerContainerView.alpha = 1
             self.divider2.isHidden = false
-//            self.datePicker.isHidden = false
             self.divider2.alpha = 1
+//            self.datePicker.isHidden = false
+            self.view.setNeedsLayout()
         }
     }
     
@@ -178,7 +181,7 @@ final class TaskDetailsViewController: UIViewController {
             importance = Importance.basic
         }
         
-        presenter.didTapSaveButton(with: ToDoItem(text: textView.text,
+        presenter.didTapSaveButton(with: ToDoItem(text: textView.text == "Что надо сделать?" ? "" : textView.text,
                                                   importance: importance,
                                                   deadline: deadlineSwitch.isOn ? datePicker.date : nil))
     }
@@ -202,6 +205,7 @@ final class TaskDetailsViewController: UIViewController {
         textView.isScrollEnabled = false
         textView.autocapitalizationType = .sentences
         textView.autocorrectionType = .no
+        textView.textColor = .appColor(.tertiary)
         
         stackView.axis = .vertical
         stackView.spacing = 0
@@ -380,9 +384,9 @@ extension TaskDetailsViewController: ITaskDetailsView {
         }
         
         textView.text = model.text
-        textView.textColor = .appColor(.tertiary)
+        textView.textColor = .appColor(.primaryLabel)
         
-        importanceSegmentedControl.selectedSegmentIndex = 1
+        importanceSegmentedControl.selectedSegmentIndex = model.importance
         
         if let date = model.date {
             deadlineSwitch.isOn = true
@@ -402,17 +406,17 @@ extension TaskDetailsViewController: ITaskDetailsView {
 
 extension TaskDetailsViewController: UITextViewDelegate {
     
-//    func textViewDidBeginEditing(_ textView: UITextView) {
-//        if textView.textColor == .appColor(.tertiary) {
-//            textView.text = nil
-//            textView.textColor = .appColor(.primaryLabel)
-//        }
-//    }
-//
-//    func textViewDidEndEditing(_ textView: UITextView) {
-//        if textView.text.isEmpty {
-//            textView.text = "Что надо сделать?"
-//            textView.textColor = .appColor(.tertiary)
-//        }
-//    }
+    func textViewDidBeginEditing(_ textView: UITextView) {
+        if textView.text == "Что надо сделать?" {
+            textView.text = nil
+            textView.textColor = .appColor(.primaryLabel)
+        }
+    }
+
+    func textViewDidEndEditing(_ textView: UITextView) {
+        if textView.text.isEmpty {
+            textView.text = "Что надо сделать?"
+            textView.textColor = .appColor(.tertiary)
+        }
+    }
 }

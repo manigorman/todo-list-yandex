@@ -42,6 +42,7 @@ final class TaskCell: UITableViewCell {
     
     override func prepareForReuse() {
         super.prepareForReuse()
+        
         self.accessoryType = .none
         self.subtitleText.isHidden = false
     }
@@ -52,7 +53,6 @@ final class TaskCell: UITableViewCell {
         backgroundColor = .appColor(.secondaryBack)
         
         labelStack.axis = .vertical
-        labelStack.distribution = .fill
         labelStack.spacing = 5
         
         titleText.font = .systemFont(ofSize: 17)
@@ -74,7 +74,7 @@ final class TaskCell: UITableViewCell {
         radioImage.snp.makeConstraints {
             $0.centerY.equalToSuperview()
             $0.leading.equalToSuperview().inset(16)
-            $0.size.equalTo(16)
+            $0.size.equalTo(24)
         }
         
         addSubview(labelStack)
@@ -84,13 +84,51 @@ final class TaskCell: UITableViewCell {
             $0.leading.equalTo(radioImage.snp.trailing).offset(16)
             $0.trailing.equalToSuperview().inset(40)
             $0.top.bottom.equalToSuperview().inset(16)
+            $0.centerY.equalToSuperview()
         }
     }
     
-    public func configure(with task: TaskCell.Model) {
-        self.radioImage.image = task.radioImage
-        self.titleText.attributedText = task.titleText
-        guard let subtitleText = task.subtitleText else {
+    public func configure(with task: ToDoItem) {
+        var radioImage = UIImage()
+        let descriptionAttachment = NSTextAttachment()
+        var descriptionString = ""
+        let descriptionText = NSMutableAttributedString(string: "")
+        let dateAttachment = NSTextAttachment()
+        var dateText: NSMutableAttributedString! = nil
+        
+        switch task.importance {
+        case .low:
+            descriptionAttachment.image = SFSymbols.lowImage
+            descriptionString = " \(task.text)"
+            descriptionText.append(NSAttributedString(attachment: descriptionAttachment))
+            
+        case .important:
+            descriptionAttachment.image = SFSymbols.importantImage
+            descriptionString = " \(task.text)"
+            descriptionText.append(NSAttributedString(attachment: descriptionAttachment))
+        case .basic:
+            descriptionString = task.text
+        }
+        
+        if task.isCompleted {
+            descriptionText.append(NSAttributedString(string: descriptionString,
+                                                      attributes: [.strikethroughStyle: NSUnderlineStyle.single.rawValue]))
+            radioImage = SFSymbols.checkmarkImage
+        } else {
+            descriptionText.append(NSAttributedString(string: descriptionString))
+            radioImage = task.importance == .important ? SFSymbols.circleFilledImage : SFSymbols.circleImage
+        }
+        
+        if let deadline = task.deadline {
+            dateText = NSMutableAttributedString(string: "")
+            dateAttachment.image = SFSymbols.calendarImage
+            dateText.append(NSAttributedString(attachment: dateAttachment))
+            dateText.append(NSAttributedString(string: " \(DateFormatter.ruRuLong.string(from: deadline))"))
+        }
+        
+        self.radioImage.image = radioImage
+        self.titleText.attributedText = descriptionText
+        guard let subtitleText = dateText else {
             self.subtitleText.isHidden = true
             return
         }

@@ -10,7 +10,7 @@ import UIKit
 
 protocol ITasksPresenter: AnyObject {
     func viewDidLoad()
-    func didTapCell(at indexPath: IndexPath)
+    func didTapCell(task: ToDoItem?)
     func removeTask(at indexPath: IndexPath)
     func markCompletedTask(at indexPath: IndexPath)
     func showHideCompleted()
@@ -26,7 +26,7 @@ final class TasksPresenter {
     private lazy var viewModelFactory = TasksViewModelFactory()
     
     // Private
-    private let cache = MockFileCacheService()
+    private let fileCacheService: IFileCacheService
     
     private var isShowingCompleted = false
     
@@ -39,8 +39,10 @@ final class TasksPresenter {
     
     // MARK: - Initialization
     
-    init(router: ITasksRouter) {
+    init(router: ITasksRouter,
+         fileCacheService: FileCacheService) {
         self.router = router
+        self.fileCacheService = fileCacheService
     }
     
     // MARK: - Private
@@ -51,15 +53,13 @@ final class TasksPresenter {
         view?.update(with: viewModel)
     }
     
-    private func loadTasks() {
-        cache.load(from: "Data.json") { result in
+    private func fetchTasks() {
+        fileCacheService.load { result in
             switch result {
             case .success(let items):
-                self.tasks = items.filter { $0.isCompleted == false }
-                return
+                self.tasks = items
             case .failure(let error):
-                print(error.localizedDescription)
-                return
+                print(error)
             }
         }
     }
@@ -70,36 +70,54 @@ final class TasksPresenter {
 extension TasksPresenter: ITasksPresenter {
     
     func viewDidLoad() {
-        loadTasks()
+        fileCacheService.addDelegate(self)
+        fetchTasks()
     }
     
-    func didTapCell(at indexPath: IndexPath) {
-        if indexPath.row < self.tasks.count {
-            router.openNewTask(with: tasks[indexPath.row])
-        } else {
-            router.openNewTask(with: nil)
-        }
+    func didTapCell(task: ToDoItem?) {
+        router.openNewTask(with: task)
     }
     
     func removeTask(at indexPath: IndexPath) {
-        cache.delete(id: self.tasks[indexPath.row].id)
-        
-        cache.save(to: "Data.json") { result in
-            switch result {
-            case .success:
+        fileCacheService.delete(by: self.tasks[indexPath.row].id) { [weak self] error in
+            guard let error = error else {
+                DispatchQueue.main.async {
+                    self?.fileCacheService.load { _ in
+}
+                }
                 return
-            case .failure(let error):
-                NSLog(error.localizedDescription)
             }
+            print(error.localizedDescription)
         }
     }
     
     func markCompletedTask(at indexPath: IndexPath) {
-        
+        fileCacheService.update(ToDoItem(id: tasks[indexPath.row].id,
+                              text: tasks[indexPath.row].text,
+                              importance: tasks[indexPath.row].importance,
+                              deadline: tasks[indexPath.row].deadline,
+                              isCompleted: !tasks[indexPath.row].isCompleted,
+                              createdAt: tasks[indexPath.row].createdAt,
+                              changedAt: tasks[indexPath.row].changedAt)) { [weak self] error in
+            guard let error = error else {
+                DispatchQueue.main.async {
+                    self?.fileCacheService.load { _ in
+                    }
+                }
+                return
+            }
+            print(error.localizedDescription)
+        }
     }
     
     func showHideCompleted() {
         isShowingCompleted.toggle()
         updateView(with: self.tasks)
+    }
+}
+
+extension TasksPresenter: FileCacheServiceDelegate {
+    func didUpdateTasks(_ tasks: [ToDoItem]) {
+        self.tasks = tasks
     }
 }

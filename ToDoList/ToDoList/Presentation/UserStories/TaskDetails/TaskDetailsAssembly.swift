@@ -13,9 +13,11 @@ final class TaskDetailsAssembly {
     // MARK: - Public
     
     func assemble(task: ToDoItem?) -> UIViewController {
+        let fileCacheService = FileCacheService()
+        
         let router = TaskDetailsRouter()
         
-        let presenter = TaskDetailsPresenter(router: router, task: task)
+        let presenter = TaskDetailsPresenter(router: router, fileCacheService: fileCacheService, task: task)
         
         let controller = TaskDetailsViewController(presenter: presenter)
         

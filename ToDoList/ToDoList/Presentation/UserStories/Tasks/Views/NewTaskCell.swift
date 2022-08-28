@@ -8,6 +8,11 @@
 import UIKit
 import SnapKit
 
+private extension CGFloat {
+    static let margin: CGFloat = 16
+    static let leadingInset: CGFloat = 52
+}
+
 final class NewTaskCell: UITableViewCell {
     
     static let id = "newTaskCellId"
@@ -47,8 +52,8 @@ final class NewTaskCell: UITableViewCell {
     private func setUpConstraints() {
         addSubview(label)
         label.snp.makeConstraints {
-            $0.top.trailing.bottom.equalToSuperview().inset(16)
-            $0.leading.equalToSuperview().inset(52)
+            $0.top.trailing.bottom.equalToSuperview().inset(CGFloat.margin)
+            $0.leading.equalToSuperview().inset(CGFloat.leadingInset)
         }
     }
 }
