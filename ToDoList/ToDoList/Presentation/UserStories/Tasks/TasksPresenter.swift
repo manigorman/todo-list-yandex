@@ -82,19 +82,16 @@ extension TasksPresenter: ITasksPresenter {
     }
     
     func removeTask(at indexPath: IndexPath) {
-        //        let deletedElement = self.list.remove(at: indexPath.row)
-        //        self.tableView.deleteRows(at: [indexPath], with: .fade)
-        //        FileCache.shared.removeItem(with: self.tasks[indexPath.row].id)
-        //        do {
-        //            MockFileCacheService().save(to: "Data.json") { result in
-        //                switch result {
-        //                case .success:
-        //                    print("success")
-        //                case .failure(let error):
-        //                    print(error)
-        //                }
-        //            }
-        //        }
+        cache.delete(id: self.tasks[indexPath.row].id)
+        
+        cache.save(to: "Data.json") { result in
+            switch result {
+            case .success:
+                return
+            case .failure(let error):
+                NSLog(error.localizedDescription)
+            }
+        }
     }
     
     func markCompletedTask(at indexPath: IndexPath) {

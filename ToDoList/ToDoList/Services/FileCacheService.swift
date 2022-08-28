@@ -20,5 +20,5 @@ protocol FileCacheService {
     
   func add(_ newItem: ToDoItem)
     
-  func delete(id: String)
+  func delete(id: UUID)
 }

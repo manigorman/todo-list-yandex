@@ -83,6 +83,9 @@ final class TasksViewController: UIViewController {
     }
     
     private func handleMoveToTrash(at indexPath: IndexPath) {
+        tasks.remove(at: indexPath.row)
+        tableView.deleteRows(at: [indexPath], with: .fade)
+        tableView.reloadData()
         presenter.removeTask(at: indexPath)
     }
     

@@ -53,16 +53,14 @@ final class TaskCell: UITableViewCell {
         
         labelStack.axis = .vertical
         labelStack.distribution = .fill
-        labelStack.translatesAutoresizingMaskIntoConstraints = false
+        labelStack.spacing = 5
         
         titleText.font = .systemFont(ofSize: 17)
         titleText.textColor = .appColor(.primaryLabel)
-        titleText.translatesAutoresizingMaskIntoConstraints = false
         titleText.numberOfLines = 3
         
         subtitleText.font = .systemFont(ofSize: 15)
         subtitleText.textColor = .appColor(.tertiary)
-        subtitleText.translatesAutoresizingMaskIntoConstraints = false
         
         radioImage.image = UIImage(systemName: "circle",
                                    withConfiguration: UIImage.SymbolConfiguration(weight: .semibold))?
@@ -80,14 +78,13 @@ final class TaskCell: UITableViewCell {
         }
         
         addSubview(labelStack)
-        labelStack.snp.makeConstraints {
-            $0.leading.equalTo(radioImage.snp.trailing).offset(16)
-            $0.top.trailing.bottom.equalToSuperview().inset(16)
-            $0.height.greaterThanOrEqualTo(42)
-        }
-        
         labelStack.addArrangedSubview(titleText)
         labelStack.addArrangedSubview(subtitleText)
+        labelStack.snp.makeConstraints {
+            $0.leading.equalTo(radioImage.snp.trailing).offset(16)
+            $0.trailing.equalToSuperview().inset(40)
+            $0.top.bottom.equalToSuperview().inset(16)
+        }
     }
     
     public func configure(with task: TaskCell.Model) {

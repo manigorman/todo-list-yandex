@@ -10,7 +10,7 @@ import Foundation
 protocol ITaskDetailsPresenter: AnyObject {
     func viewDidLoad()
     func didTapCancelButton()
-    func didTapSaveButton()
+    func didTapSaveButton(with task: ToDoItem)
     func didTapDeleteButton()
 }
 
@@ -29,6 +29,8 @@ final class TaskDetailsPresenter {
             updateView(with: task)
         }
     }
+    
+    private let cache = MockFileCacheService()
     
     // Models
     
@@ -57,8 +59,25 @@ extension TaskDetailsPresenter: ITaskDetailsPresenter {
         router.dismiss()
     }
     
-    func didTapSaveButton() {
-        print("save")
+    func didTapSaveButton(with item: ToDoItem) {
+        
+        cache.add(ToDoItem(id: task?.id ?? UUID(),
+                           text: item.text,
+                           importance: item.importance,
+                           deadline: item.deadline,
+                           isCompleted: self.task?.isCompleted ?? false,
+                           createdAt: self.task?.createdAt ?? Date(),
+                           changedAt: self.task != nil ? Date() : nil))
+        
+        cache.save(to: "Data.json") { result in
+            switch result {
+            case .success:
+                return
+            case .failure(let error):
+                NSLog(error.localizedDescription)
+            }
+        }
+        
         router.dismiss()
     }
     

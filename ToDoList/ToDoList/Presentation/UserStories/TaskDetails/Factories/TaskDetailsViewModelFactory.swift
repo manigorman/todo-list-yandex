@@ -15,7 +15,6 @@ final class TaskDetailsViewModelFactory {
         }
         
         var importance: Int = -1
-        var dateText: String?
         
         switch task.importance {
         case .low:
@@ -26,14 +25,8 @@ final class TaskDetailsViewModelFactory {
             importance = 2
         }
         
-        if let date = task.deadline {
-            dateText = DateFormatter.ruRuLong.string(from: date)
-        }
-        
         return .init(text: task.text,
                      importance: importance,
-                     dateText: dateText,
-                     date: task.deadline,
-                     deleteButtonText: "Удалить")
+                     date: task.deadline)
     }
 }

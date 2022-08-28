@@ -19,9 +19,7 @@ final class TaskDetailsViewController: UIViewController {
     struct Model {
         let text: String
         let importance: Int
-        let dateText: String?
         let date: Date?
-        let deleteButtonText: String
     }
     
     // Dependencies
@@ -68,8 +66,9 @@ final class TaskDetailsViewController: UIViewController {
     
     init(presenter: ITaskDetailsPresenter) {
         self.presenter = presenter
+
         super.init(nibName: nil, bundle: nil)
-        
+
         deadlineSwitch.addTarget(self, action: #selector(handleDateSwitch(_:)), for: .valueChanged)
         dateButton.addTarget(self, action: #selector(handleDateButton), for: .touchUpInside)
         datePicker.addTarget(self, action: #selector(handleDatePicker(_:)), for: .valueChanged)
@@ -88,10 +87,11 @@ final class TaskDetailsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        presenter.viewDidLoad()
         setUpUI()
         setUpConstraints()
         setUpDelegates()
+        
+        presenter.viewDidLoad()
     }
     
     // MARK: - Actions
@@ -136,8 +136,8 @@ final class TaskDetailsViewController: UIViewController {
                 self.pickerContainerView.isHidden = true
                 self.pickerContainerView.alpha = 0
                 self.dateButton.isHidden = true
-                self.datePicker.isHidden = true
                 self.dateButton.alpha = 0
+//                self.datePicker.isHidden = true
             }
         }
     }
@@ -147,7 +147,7 @@ final class TaskDetailsViewController: UIViewController {
             self.pickerContainerView.isHidden = false
             self.pickerContainerView.alpha = 1
             self.divider2.isHidden = false
-            self.datePicker.isHidden = false
+//            self.datePicker.isHidden = false
             self.divider2.alpha = 1
         }
     }
@@ -167,22 +167,20 @@ final class TaskDetailsViewController: UIViewController {
     }
     
     @objc private func handleSave() {
-        presenter.didTapSaveButton()
-        //        let item = contentView.getTask()
-        //
-        //        FileCache.shared.add(ToDoItem(id: self.task.id,
-        //                                      text: item.text,
-        //                                      importance: item.importance,
-        //                                      deadline: item.deadline,
-        //                                      isCompleted: self.task.isCompleted,
-        //                                      createdAt: self.task.createdAt,
-        //                                      changedAt: Date()))
-        //
-        //        do {
-        //            try FileCache.shared.saveJSONItems(to: "Data.json")
-        //        } catch {
-        //            NSLog(error.localizedDescription)
-        //        }
+        var importance = Importance.basic
+        
+        switch importanceSegmentedControl.selectedSegmentIndex {
+        case 0:
+            importance = Importance.low
+        case 2:
+            importance = Importance.important
+        default:
+            importance = Importance.basic
+        }
+        
+        presenter.didTapSaveButton(with: ToDoItem(text: textView.text,
+                                                  importance: importance,
+                                                  deadline: deadlineSwitch.isOn ? datePicker.date : nil))
     }
     
     // MARK: - Private
@@ -224,7 +222,6 @@ final class TaskDetailsViewController: UIViewController {
         importanceSegmentedControl.insertSegment(with: SFSymbols.importantImage,
                                                  at: 2,
                                                  animated: false)
-        importanceSegmentedControl.selectedSegmentIndex = 1
         
         divider.backgroundColor = .appColor(.separator)
         
@@ -234,7 +231,6 @@ final class TaskDetailsViewController: UIViewController {
         deadlineLabel.text = "Сделать до"
         deadlineLabel.font = .systemFont(ofSize: 17)
         
-        dateButton.setTitle("02 августа", for: .normal)
         dateButton.setTitleColor(.appColor(.blue), for: .normal)
         dateButton.titleLabel?.font = .systemFont(ofSize: 13, weight: .medium)
         dateButton.contentHorizontalAlignment = .left
@@ -366,8 +362,9 @@ extension TaskDetailsViewController: ITaskDetailsView {
     func update(with model: Model?) {
         guard let model = model else {
             textView.text = "Что надо сделать?"
+            textView.textColor = .appColor(.tertiary)
             
-            self.importanceSegmentedControl.selectedSegmentIndex = 1
+            importanceSegmentedControl.selectedSegmentIndex = 1
             
             deadlineSwitch.isOn = false
             
@@ -382,44 +379,40 @@ extension TaskDetailsViewController: ITaskDetailsView {
             return
         }
         
-        self.textView.text = model.text
+        textView.text = model.text
+        textView.textColor = .appColor(.tertiary)
         
-        self.dateButton.setTitle(model.dateText ?? DateFormatter.ruRuLong.string(from: Date()), for: .normal)
+        importanceSegmentedControl.selectedSegmentIndex = 1
         
-        if let dateText = model.dateText {
+        if let date = model.date {
             deadlineSwitch.isOn = true
-            dateButton.setTitle(dateText, for: .normal)
+            dateButton.setTitle(DateFormatter.ruRuLong.string(from: date), for: .normal)
             dateButton.isHidden = false
             dateButton.alpha = 1
         } else {
+            deadlineSwitch.isOn = false
             dateButton.isHidden = true
-            dateButton.alpha = 0
-        }
-        
-        if let date = model.date {
-            datePicker.date = date
-            pickerContainerView.isHidden = false
-            pickerContainerView.alpha = 1
-        } else {
             pickerContainerView.isHidden = true
             pickerContainerView.alpha = 0
+            dateButton.setTitle(DateFormatter.ruRuLong.string(from: Date()), for: .normal)
+            dateButton.alpha = 0
         }
     }
 }
 
 extension TaskDetailsViewController: UITextViewDelegate {
     
-    func textViewDidBeginEditing(_ textView: UITextView) {
-        if textView.textColor == .appColor(.tertiary) {
-            textView.text = nil
-            textView.textColor = .appColor(.primaryLabel)
-        }
-    }
-    
-    func textViewDidEndEditing(_ textView: UITextView) {
-        if textView.text.isEmpty {
-            textView.text = "Что надо сделать?"
-            textView.textColor = .appColor(.tertiary)
-        }
-    }
+//    func textViewDidBeginEditing(_ textView: UITextView) {
+//        if textView.textColor == .appColor(.tertiary) {
+//            textView.text = nil
+//            textView.textColor = .appColor(.primaryLabel)
+//        }
+//    }
+//
+//    func textViewDidEndEditing(_ textView: UITextView) {
+//        if textView.text.isEmpty {
+//            textView.text = "Что надо сделать?"
+//            textView.textColor = .appColor(.tertiary)
+//        }
+//    }
 }

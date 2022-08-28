@@ -52,7 +52,7 @@ final class TasksViewModelFactory {
                                                       attributes: [.strikethroughStyle: NSUnderlineStyle.single.rawValue]))
             radioImage = SFSymbols.checkmarkImage
         } else {
-            descriptionText.append(NSAttributedString(string: "\(task.text)"))
+            descriptionText.append(NSAttributedString(string: descriptionString))
             radioImage = task.importance == .important ? SFSymbols.circleFilledImage : SFSymbols.circleImage
         }
         

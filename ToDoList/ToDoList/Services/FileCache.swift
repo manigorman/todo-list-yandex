@@ -41,7 +41,6 @@ final class FileCache {
     }
     
     public func saveJSONItems(to file: String) throws {
-        
         let dict: [String: Any] = ["list": self.list.map { $0.json }]
         
         let url = FileManager.cachesDirectoryURL.appendingPathComponent(file)
@@ -66,6 +65,8 @@ final class FileCache {
             throw FileCacheErrors.noDataInFile(url: url)
         }
         
-        return list.compactMap { ToDoItem.parse(json: $0) }.sorted { $0.createdAt < $1.createdAt }
+        self.list = list.compactMap { ToDoItem.parse(json: $0) }.sorted { $0.createdAt < $1.createdAt }
+        
+        return self.list
     }
 }

@@ -13,7 +13,7 @@ class MockFileCacheService: FileCacheService {
     
     func save(to file: String, completion: @escaping (Result<Void, Error>) -> Void) {
         
-        self.syncQueue.asyncAfter(deadline: .now() + 2) {
+        self.syncQueue.asyncAfter(deadline: .now()) {
             do {
                 try FileCache.shared.saveJSONItems(to: file)
             } catch {
@@ -24,11 +24,15 @@ class MockFileCacheService: FileCacheService {
     }
     
     func add(_ newItem: ToDoItem) {
-        
+        self.syncQueue.asyncAfter(deadline: .now()) {
+            FileCache.shared.add(newItem)
+        }
     }
     
-    func delete(id: String) {
-        
+    func delete(id: UUID) {
+        self.syncQueue.asyncAfter(deadline: .now()) {
+            FileCache.shared.removeItem(with: id)
+        }
     }
     
     func load(
