@@ -8,8 +8,8 @@
 
 import Foundation
 import CoreData
+import UIKit
 
 @objc(Task)
 public class Task: NSManagedObject {
-
 }

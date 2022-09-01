@@ -23,6 +23,15 @@ extension Task {
     @NSManaged public var importance: String?
     @NSManaged public var isCompleted: Bool
 
+    func snapshot(_ item: ToDoItem, task: Task) {
+        task.id = item.id
+        task.text = item.text
+        task.importance = item.importance.rawValue
+        task.isCompleted = item.isCompleted
+        task.deadline = item.deadline
+        task.createdAt = item.createdAt
+        task.changedAt = item.changedAt
+    }
 }
 
 extension Task: Identifiable {

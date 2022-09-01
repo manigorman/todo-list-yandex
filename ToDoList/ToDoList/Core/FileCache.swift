@@ -22,7 +22,7 @@ final class FileCache {
     
     private init() {}
     
-    public func load(completion: @escaping (Result<[ToDoItem], Error>) -> Void) {
+    func load(completion: @escaping (Result<[ToDoItem], Error>) -> Void) {
         do {
             let tasks = try managedContext.fetch(Task.fetchRequest())
             let list = tasks.map {
@@ -58,13 +58,7 @@ final class FileCache {
             return
         }
         
-        task.id = item.id
-        task.text = item.text
-        task.importance = item.importance.rawValue
-        task.isCompleted = item.isCompleted
-        task.deadline = item.deadline
-        task.createdAt = item.createdAt
-        task.changedAt = item.changedAt
+        task.snapshot(item, task: task.self)
         
         do {
             try managedContext.save()
@@ -74,16 +68,10 @@ final class FileCache {
         completion(nil)
     }
     
-    public func insert(_ item: ToDoItem, completion: @escaping (Error?) -> Void) {
+    func insert(_ item: ToDoItem, completion: @escaping (Error?) -> Void) {
         
         let newTask = Task(context: self.managedContext)
-        newTask.id = item.id
-        newTask.text = item.text
-        newTask.importance = item.importance.rawValue
-        newTask.isCompleted = item.isCompleted
-        newTask.deadline = item.deadline
-        newTask.createdAt = item.createdAt
-        newTask.changedAt = item.changedAt
+        newTask.snapshot(item, task: newTask.self)
         
         do {
             try self.managedContext.save()
@@ -93,7 +81,7 @@ final class FileCache {
         completion(nil)
     }
     
-    public func delete(with id: UUID, completion: @escaping (Error?) -> Void) {
+    func delete(with id: UUID, completion: @escaping (Error?) -> Void) {
         
         let fetchRequest: NSFetchRequest<Task> = Task.fetchRequest()
         fetchRequest.predicate = NSPredicate(format: "id = %@", "\(id.description)")

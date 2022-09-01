@@ -188,6 +188,7 @@
 			children = (
 				C55A784828BBD25B002CE5DF /* DelegatesList.swift */,
 				C52F40762895C32E00B48390 /* FileCache.swift */,
+				C52F40732895C30E00B48390 /* ToDoItem.swift */,
 				C55A783A28BB9FDD002CE5DF /* CoreData */,
 			);
 			path = Core;
@@ -226,7 +227,6 @@
 			children = (
 				C5DDCBE128A97F4700B7D686 /* NetworkService.swift */,
 				C5DDCBE528A9809D00B7D686 /* FileCacheService.swift */,
-				C52F40732895C30E00B48390 /* ToDoItem.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
