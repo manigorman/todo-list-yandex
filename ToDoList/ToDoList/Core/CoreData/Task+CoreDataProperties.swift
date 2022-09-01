@@ -1,8 +1,8 @@
 //
 //  Task+CoreDataProperties.swift
-//  ToDoList
+//  
 //
-//  Created by Igor Manakov on 28.08.2022.
+//  Created by Igor Manakov on 01.09.2022.
 //
 //
 
@@ -15,13 +15,13 @@ extension Task {
         return NSFetchRequest<Task>(entityName: "Task")
     }
 
-    @NSManaged public var id: UUID?
-    @NSManaged public var text: String?
-    @NSManaged public var createdAt: Date?
-    @NSManaged public var deadline: Date?
     @NSManaged public var changedAt: Date?
+    @NSManaged public var createdAt: Date
+    @NSManaged public var deadline: Date?
+    @NSManaged public var id: UUID
     @NSManaged public var importance: String?
     @NSManaged public var isCompleted: Bool
+    @NSManaged public var text: String
 
     func snapshot(_ item: ToDoItem, task: Task) {
         task.id = item.id
@@ -32,8 +32,4 @@ extension Task {
         task.createdAt = item.createdAt
         task.changedAt = item.changedAt
     }
-}
-
-extension Task: Identifiable {
-
 }

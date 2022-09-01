@@ -26,12 +26,12 @@ final class FileCache {
         do {
             let tasks = try managedContext.fetch(Task.fetchRequest())
             let list = tasks.map {
-                ToDoItem(id: $0.id!,
-                         text: $0.text!,
+                ToDoItem(id: $0.id,
+                         text: $0.text,
                          importance: Importance(rawValue: $0.importance!)!,
                          deadline: $0.deadline,
                          isCompleted: $0.isCompleted,
-                         createdAt: $0.createdAt!,
+                         createdAt: $0.createdAt,
                          changedAt: $0.changedAt)
             }
             completion(.success(list))
