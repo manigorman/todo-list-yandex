@@ -30,15 +30,17 @@ final class TaskDetailsPresenter {
         }
     }
     
-    private let cache = MockFileCacheService()
+    private let fileCacheService: IFileCacheService
     
     // Models
     
     // MARK: - Initialization
     
     init(router: ITaskDetailsRouter,
+         fileCacheService: FileCacheService,
          task: ToDoItem?) {
         self.router = router
+        self.fileCacheService = fileCacheService
         self.task = task
     }
     
@@ -60,21 +62,43 @@ extension TaskDetailsPresenter: ITaskDetailsPresenter {
     }
     
     func didTapSaveButton(with item: ToDoItem) {
+        guard let task = task else {
+            fileCacheService.insert(ToDoItem(id: UUID(),
+                                             text: item.text,
+                                             importance: item.importance,
+                                             deadline: item.deadline,
+                                             isCompleted: false,
+                                             createdAt: Date(),
+                                             changedAt: nil)) { [weak self] error in
+                if let error = error {
+                    print(error)
+                    return
+                } else {
+                    self?.fileCacheService.load { _ in
+                    }
+                    DispatchQueue.main.async {
+                        self?.router.dismiss()
+                    }
+                }
+            }
+            return
+        }
         
-        cache.add(ToDoItem(id: task?.id ?? UUID(),
-                           text: item.text,
-                           importance: item.importance,
-                           deadline: item.deadline,
-                           isCompleted: self.task?.isCompleted ?? false,
-                           createdAt: self.task?.createdAt ?? Date(),
-                           changedAt: self.task != nil ? Date() : nil))
-        
-        cache.save(to: "Data.json") { result in
-            switch result {
-            case .success:
-                return
-            case .failure(let error):
-                NSLog(error.localizedDescription)
+        fileCacheService.update(ToDoItem(id: task.id,
+                                         text: item.text,
+                                         importance: item.importance,
+                                         deadline: item.deadline,
+                                         isCompleted: task.isCompleted,
+                                         createdAt: self.task?.createdAt ?? Date(),
+                                         changedAt: Date())) { [weak self] error in
+            if let error = error {
+                print(error)
+            } else {
+                self?.fileCacheService.load { _ in
+                }
+                DispatchQueue.main.async {
+                    self?.router.dismiss()
+                }
             }
         }
         
@@ -86,12 +110,12 @@ extension TaskDetailsPresenter: ITaskDetailsPresenter {
     }
     
     func didTapDeleteButton() {
-//        FileCache.shared.removeItem(with: task.id)
-//        self.dismiss(animated: true)
-//        do {
-//            try FileCache.shared.saveJSONItems(to: "Data.json")
-//        } catch {
-//            NSLog(error.localizedDescription)
-//        }
+        //        FileCache.shared.removeItem(with: task.id)
+        //        self.dismiss(animated: true)
+        //        do {
+        //            try FileCache.shared.saveJSONItems(to: "Data.json")
+        //        } catch {
+        //            NSLog(error.localizedDescription)
+        //        }
     }
 }

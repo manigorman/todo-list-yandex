@@ -17,14 +17,14 @@ final class TasksViewController: UIViewController {
     
     struct Model {
         let headerViewModel: HeaderView.Model
-        let tasks: [TaskCell.Model]
+        let tasks: [ToDoItem]
     }
     
     // Dependencies
     private let presenter: ITasksPresenter
     
     // Private
-    private var tasks: [TaskCell.Model] = []
+    private var tasks: [ToDoItem] = []
     
     // UI
     private lazy var tableView = UITableView(frame: .zero, style: .insetGrouped)
@@ -84,9 +84,8 @@ final class TasksViewController: UIViewController {
     
     private func handleMoveToTrash(at indexPath: IndexPath) {
         tasks.remove(at: indexPath.row)
-        tableView.deleteRows(at: [indexPath], with: .fade)
-        tableView.reloadData()
         presenter.removeTask(at: indexPath)
+        tableView.deleteRows(at: [indexPath], with: .fade)
     }
     
     private func handleEdit(at indexPath: IndexPath) {
@@ -105,8 +104,8 @@ extension TasksViewController: ITasksView {
         DispatchQueue.main.async {
             self.headerView.configure(with: model.headerViewModel)
         }
-        self.tasks = model.tasks
         DispatchQueue.main.async {
+            self.tasks = model.tasks
             self.tableView.reloadData()
         }
     }
@@ -155,8 +154,11 @@ extension TasksViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        
-        presenter.didTapCell(at: indexPath)
+        if indexPath.row < self.tasks.count {
+            presenter.didTapCell(task: tasks[indexPath.row])
+        } else {
+            presenter.didTapCell(task: nil)
+        }
     }
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
